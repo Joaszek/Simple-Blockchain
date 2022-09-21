@@ -3,26 +3,26 @@ package blockchain;
 
 import users.User;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
+
+import static jdk.vm.ci.meta.ValueKind.Illegal;
 
 
 public class Block {
-    private LinkedList<Transaction> transactions;
+    private List<Transaction> transactions;
     private String hash;
     private String previousHash;
     boolean isFirst;
-    private int id;
+    private static int id;
     private BlockHeader blockHeader;
 
-    Block(){
+    public Block(){
         //core
         this.isFirst=false;
         this.transactions=new LinkedList<>();
@@ -31,8 +31,6 @@ public class Block {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        //visualisation
-
         this.blockHeader=new BlockHeader();
 
     }
@@ -62,103 +60,103 @@ public class Block {
     //////
     //rozdzielić interakcje, dodawać przez argumenty
     //////
-    public void addTransactionToBlock(LinkedList<User> users)
+    public void addTransactionToBlock(List<User> users)
     {
 
         Scanner scanner = new Scanner(System.in);
-        String transactionName;
         double transactionValue;
-        String user1Name;
-        String user2Name;
-        String temp1;
+        String user1Name, user2Name, transactionName;
         Transaction temp;
         boolean quit=true;
         boolean isUser1Capable=false;
-        boolean FoundUser1=false;
-        boolean FoundUser2=false;
 
         int option;
         while(quit)
         {
-            temp= new Transaction();
-            System.out.println("Adding new transaction:");
+        System.out.println("TRANSACTION");
 
-            //checking if users exist
-            System.out.println("Sender name: ");
-            user1Name= scanner.nextLine();
-            System.out.println("Recipient name: ");
-            user2Name = scanner.nextLine();
+        System.out.println("Enter User 1 Name: ");
+        user1Name=checkIfUserExists(users);
 
-            System.out.println("Transaction name: ");
-            transactionName= scanner.nextLine();
-            System.out.println("Transaction value: ");
-            transactionValue = scanner.nextDouble();
-            while(transactionValue<0)
-            {
-                System.out.println("Value must be greater/equal 0");
-                transactionValue = scanner.nextDouble();
-            }
+        System.out.println("Enter User 2 Name: ");
+        user2Name=checkIfUserExists(users);
 
-            for(User user:users)
-            {
-                if(user.getName().equals(user1Name))FoundUser1=true;
+        transactionValue=checkIfOperationIsPossible(user1Name);
 
-                if(user.getName().equals(user2Name))FoundUser2=true;
-            }
+        transactionName=settransactionName();
+        this.transactions.add(newTransaction(user1Name,user2Name,transactionValue));
+        addTransactionToWallet(newTransaction(user1Name,user2Name,transactionValue));
+        addTransactionToWallet(newTransaction(user2Name,user1Name,-1*transactionValue));
 
-            if(FoundUser1 && FoundUser2)
-            {
-                for(User user : users)
-                {
-                    if (user.getName().equals(user1Name)&&user.checkIfCapable(transactionValue))
-                    {
-                        isUser1Capable=true;
-                    }
-                }
-                if(isUser1Capable)
-                {
-                    for(User user : users)
-                    {
-                        if(user.getName().equals(user1Name))
-                        {
-                            //add transaction to block
-                            temp.setTransactionName(transactionName);
-                            temp.setTransactionValue(transactionValue);
-                            temp.setTimestamp();
-                            this.transactions.add(temp);
-
-                            //add transaction to user1
-                            user.addWalletTransaction(
-                                    transactionName,
-                                    (-1)*transactionValue);
-                            user.give(transactionValue);
-                        }
-                        if(user.getName().equals(user2Name))
-                        {
-                            user.addWalletTransaction(transactionName,transactionValue);
-                            user.receive(transactionValue);
-                        }
-                    }
-                }
-                else
-                {
-                    System.out.println("not enough coins");
-                }
-            }
-            else
-            {
-                System.out.println("Didn't find the user");
-            }
-            FoundUser1=false;
-            FoundUser2=false;
-            System.out.println("Add new transaction(1) or quit(2)?");
-            option=scanner.nextInt();
-            isUser1Capable=false;
-            //to take enter
-            temp1=scanner.nextLine();
-            if(option==2)quit=false;
         }
+
+        System.out.println("Add new transaction(1) or quit(2)?");
+        option=scanner.nextInt();
+        isUser1Capable=false;
+        //to take enter
+        temp1=scanner.nextLine();
+        if(option==2)quit=false;
+
     }
+
+    private String settransactionName()
+    {
+        System.out.println("Enter Transaction Name: ");
+        transactionName=scanner.nextLine();
+        return transactionName;
+    }
+
+
+    private String checkIfUserExists(List<User> users)
+    {
+        Scanner scanner = new Scanner(System.in);
+        String userName = null;
+        System.out.println("Sign user name: ");
+        try
+        {
+            userName = scanner.nextLine();
+        }catch (Exception e)
+        {
+            throw new RuntimeException("Unsupported name: " + userName);
+        }
+        for(User user : users)
+        {
+            if(user.getName().equals(userName))
+            {
+                return user.getName();
+            }
+        }
+        System.out.println("Didn't find user name: "+ userName);
+        return null;
+    }
+    private double checkIfOperationIsPossible(String user1Name) {
+
+        Scanner scanner = new Scanner(System.in);
+        double transactionValue = 0;
+
+        System.out.println("Enter Transaction Value: ");
+        try {
+            transactionValue = scanner.nextDouble();
+        }catch (Exception e)
+        {
+            throw new RuntimeException("Unsupported value: " + transactionValue);
+        }
+        while(transactionValue<=0)
+        {
+            System.out.println("Transaction value should be greater than 0");
+            System.out.println("Enter transactionValue: ");
+            transactionValue=scanner.nextDouble();
+        }
+        return transactionValue;
+    }
+
+    private Transaction newTransaction(String user1Name, String user2Name, double transactionValue)
+    {
+        Transaction transaction = new Transaction();
+        transaction.setTransactionValue(transactionValue);
+        transaction.setTransactionName();
+    }
+
     public void setPreviousHash(Block block)
     {
         this.previousHash=block.getHash();

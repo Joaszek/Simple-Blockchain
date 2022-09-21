@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import JSON.WriteFromFile;
 import JSON.WriteToFile;
+import menu.Menu;
 import users.*;
 
 // TODO: 15.07.2022
@@ -29,8 +30,9 @@ public class Main {
 
     public static void main(String[]Args){
 
+
         //variables to blockchain
-        boolean  loop=true;
+        /*
         List<Block> blockchain = new ArrayList<>();
         List<User> users = new ArrayList<>();
 
@@ -53,6 +55,7 @@ public class Main {
         System.out.println(user1.returnID());
         Log4j
         process(loop, blockchain, users, scanner, idNumber, user1);
-
+        */
+         new Menu();
     }
 }
