@@ -21,13 +21,9 @@ public class Wallet {
         return transactions;
     }
 
-    public void addTransactions(String transactionName, double transactionValue) {
+    public void addTransactions(Transaction transaction) {
 
-        Transaction temp= new Transaction();
-        temp.setTransactionName(transactionName);
-        temp.setTransactionValue(transactionValue);
-        temp.setTimestamp();
-        this.transactions.add(temp);
+        this.transactions.add(transaction);
     }
 
     public double getBalance() {

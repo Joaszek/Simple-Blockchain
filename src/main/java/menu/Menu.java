@@ -7,8 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import users.User;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class Menu {
     private List<Block> blockchain;
@@ -30,13 +32,13 @@ public class Menu {
             int option = getOption(blockchain, users);
 
             switch (option)            {
-                case 1-> createNewBlock();
+                case 1-> addTransactionToBlock();
                 case 2-> searchBlockByHash();
                 case 3-> searchBlockByID();
                 case 4-> addNewUser();
                 case 5-> printUserInformation();
                 case 6-> showLastBlock(lastBlock);
-                case 7-> writeDataToFile();
+                case 7-> writeDataToFile(users);
                 case 8-> getDataFromFile();
                 case 9-> endLoop(loop);
 
@@ -70,6 +72,7 @@ public class Menu {
         System.out.println("8. Write from file");
         System.out.println("9. Quit");
         System.out.println("Choice: ");
+
         option = scanner.nextInt();
 
         //logger.info("Current number of users")
@@ -84,9 +87,7 @@ public class Menu {
         Block block = new Block();
 
         block.addTransactionToBlock(users);
-        blockchain.add(newBlock);
-        lastBlock.setId(idNumber);
-        idNumber++;
+        blockchain.add(block);
         lastBlock.setBlockHeaderTimestamp();
         //setPreviousBlockHeaderHash
         lastBlock.
@@ -100,9 +101,11 @@ public class Menu {
 
     //case 2: Show Block by hash
     private void searchBlockByHash() {
+
         String tempHash;
+        Scanner scanner= new Scanner(System.in);
+
         System.out.println("Sign hash: ");
-        scanner.nextLine();
         tempHash= scanner.nextLine();
         for(Block block : blockchain)
         {
@@ -115,8 +118,10 @@ public class Menu {
 
     //case 3: Show Block by index
     private void searchBlockByID() {
+        Scanner scanner = new Scanner(System.in);
         int choice;
-        System.out.println("Choose by ID: ");
+
+        System.out.println("Enter ID: ");
         choice= scanner.nextInt();
         for(Block block : blockchain)
         {
@@ -130,6 +135,7 @@ public class Menu {
 
     //case 4: Create users
     private void addNewUser() {
+        /*
         users.add(new User());
         if(user1.returnID()==3)
         {
@@ -140,7 +146,8 @@ public class Menu {
         }
         //set others balance for 0
         users.get(users.size()-1).setName();
-        users.get(users.size()-1).setWallet();
+        users.get(users.size()-1).setWallet();*/
+
     }
 
 
@@ -149,6 +156,7 @@ public class Menu {
         String name;
         //works
         //to take enter
+        Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
         System.out.println("Name: ");
         name = scanner.nextLine();
@@ -174,9 +182,9 @@ public class Menu {
     }
 
     //case 7: Send users to UsersDoc.json
-    private void writeDataToFile() {
+    private void writeDataToFile(List<User> users) {
         try {
-            WriteToFile.writeToFile(users);
+            WriteToFile.writeToFile((LinkedList<User>) users);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -185,7 +193,7 @@ public class Menu {
     //case 8: Get DataFromFile
 
     private void getDataFromFile() {
-        WriteFromFile.writeFromFile(users);
+        WriteFromFile.writeFromFile((LinkedList<User>) users);
     }
 
 

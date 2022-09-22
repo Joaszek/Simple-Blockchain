@@ -73,8 +73,8 @@ public class User {
         return this.wallet.getBalance();
     }
 
-    public void addWalletTransaction(String transactionName, double transactionValue)
+    public void addWalletTransaction(Transaction transaction)
     {
-        this.wallet.addTransactions(transactionName,transactionValue);
+        this.wallet.addTransactions(transaction);
     }
 }
