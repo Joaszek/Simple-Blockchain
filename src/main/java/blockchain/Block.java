@@ -309,7 +309,7 @@ public class Block {
     public void setBlockHeaderTimestamp()
     {
         try{
-            blockHeader.setDate(bytesToHex(new StringBuilder(Long.toString(System.currentTimeMillis() / 1000)));
+            blockHeader.setDate(bytesToHex(new StringBuilder(Long.toString(System.currentTimeMillis() / 1000))));
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Couldn't hash block header timestamp");
         }
@@ -331,7 +331,7 @@ public class Block {
         /*try{
             return
         }*/
-        return null;
+        //return null;
     }
     public void setBlockHeaderPreviousBlockHeaderHashCode(Block block)
     {
