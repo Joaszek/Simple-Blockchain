@@ -19,6 +19,7 @@ public class Block {
     private static int id;
     private BlockHeader blockHeader;
 
+
     public Block(){
         //core
         changeTransactionToHashedString(newTransaction("Jonasz","Tob",200,"new"));
@@ -36,6 +37,8 @@ public class Block {
         this.isFirst=true;
         this.previousHash= null;
     }
+
+    //check Block data
     public void seeBlock() {
         System.out.println("Hash: " + this.getHash());
         System.out.println("Previous Hash: " + this.getPreviousHash());
@@ -49,6 +52,17 @@ public class Block {
         System.out.println("Timestamp: " + this.blockHeader.getDate());
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getHash()
+    {
+        return this.hash;
+    }
+
+
+    //Transactions
     public void addTransactionToBlock(List<User> users)
     {
 
@@ -68,7 +82,7 @@ public class Block {
 
         transactionValue=checkIfOperationIsPossible(user1Name);
 
-        transactionName=setTransactionName();
+        transactionName=getTransactionName();
 
         finalizeTransaction(user1Name, user2Name,users,transactionValue);
 
@@ -161,13 +175,11 @@ public class Block {
         return transactionValue;
     }
 
-    private String setTransactionName()
+    private String getTransactionName()
     {
-        String transactionName;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter Transaction Name: ");
-        transactionName=scanner.nextLine();
-        return transactionName;
+        return scanner.nextLine();
     }
 
     private void finalizeTransaction(String user1Name, String user2Name, List<User> users, double transactionValue)
@@ -205,14 +217,9 @@ public class Block {
             }
         }
     }
-
-    public void setPreviousHash(Block block)
+    public List<Transaction> getTransactions()
     {
-        this.previousHash=block.getHash();
-    }
-    public String getHash()
-    {
-        return this.hash;
+        return this.transactions;
     }
 
     public void printTransactions() {
@@ -226,19 +233,21 @@ public class Block {
             System.out.println("Time: "+ transaction.getTimestamp());
         }
     }
-    public List<Transaction> getTransactions()
+
+
+    //Hashing functions
+
+
+    public void setPreviousHash(Block block)
     {
-        return this.transactions;
+        this.previousHash=block.getHash();
     }
 
     public String getPreviousHash() {
         return previousHash;
     }
 
-    public int getId() {
-        return id;
-    }
-
+    //hash String using sha256 algorithm
     private String bytesToHex(StringBuilder string) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedhash = digest.digest(
@@ -255,6 +264,7 @@ public class Block {
         return hexString.toString();
     }
 
+    //hash one Transaction
     private String changeTransactionToHashedString(Transaction transaction)
     {
         StringBuilder finalHash= new StringBuilder();
@@ -273,7 +283,8 @@ public class Block {
     return transactionHash;
     }
 
-    private void changeTimestampToHashedString()
+    //hash Timestamp of Transaction
+    /*private void changeTimestampToHashedString()
     {
         StringBuilder timestamp= new StringBuilder();
         timestamp.append(LocalDateTime.now().toString());
@@ -284,7 +295,7 @@ public class Block {
             throw new RuntimeException("Couldn't hash timestamp");
         }
 
-    }
+    }*/
     public void setBlockHeaderTransactionsHash()
     {
         StringBuilder hash = new StringBuilder();
@@ -294,13 +305,14 @@ public class Block {
         }
         blockHeader.setTransactionsHash(hash.toString());
     }
-    public void setBlockHeaderPreviousBlockHeaderHashCode(Block block)
-    {
-        blockHeader.setPreviousBlockHeaderHash(block.getHash());
-    }
+
     public void setBlockHeaderTimestamp()
     {
-        blockHeader.setDate(Timestamp.valueOf(LocalDateTime.now()));
+        try{
+            blockHeader.setDate(bytesToHex(new StringBuilder(Long.toString(System.currentTimeMillis() / 1000)));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Couldn't hash block header timestamp");
+        }
     }
     private void setBlockHeader()
     {
@@ -309,15 +321,21 @@ public class Block {
         setBlockHeaderTimestamp();
     }
 
-    private String calculateHash()
-    {/*
-        return StringUtil.applySha256(
+    private String calculateBlockHeaderHash()
+    {
+        return
                 previousHash +
-                        timeStamp +
-                        nonce +
-                        merkleRoot
-        );*/
+                        blockHeader.getDate() +
+                        blockHeader.getTransactionsHash() +
+                        blockHeader.getPreviousBlockHeaderHash();
+        /*try{
+            return
+        }*/
         return null;
+    }
+    public void setBlockHeaderPreviousBlockHeaderHashCode(Block block)
+    {
+        blockHeader.setPreviousBlockHeaderHash(block.getHash());
     }
 }
 

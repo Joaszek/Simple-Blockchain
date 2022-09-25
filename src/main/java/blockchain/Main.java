@@ -10,8 +10,6 @@ check if users aren't null
 
 
 public class Main {
-
-
     public static void main(String[]Args){
         new Menu();
     }

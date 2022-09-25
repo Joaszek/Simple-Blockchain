@@ -6,7 +6,7 @@ import java.util.List;
 public class BlockHeader {
 
     private String previousBlockHeaderHash;
-    private Timestamp date;
+    private String epochTime;
     private String transactionsHash;
 
     private String MerkleRoot;
@@ -22,12 +22,12 @@ public class BlockHeader {
         this.previousBlockHeaderHash = previousBlockHeaderHash;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public String getDate() {
+        return epochTime;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setDate(String epochTime) {
+        this.epochTime = epochTime;
     }
 
     public String getTransactionsHash() {
@@ -44,6 +44,14 @@ public class BlockHeader {
     private void setMerkleRoot(String merkleRoot)
     {
 
+    }
+    public int getNonce()
+    {
+        return nonce;
+    }
+    public void setNonce(int nonce)
+    {
+        this.nonce = nonce;
     }
 
     public void setTimestampHashed(String bytesToHex) {

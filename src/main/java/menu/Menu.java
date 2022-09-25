@@ -102,18 +102,19 @@ public class Menu {
     //case 2: Show Block by hash
     private void searchBlockByHash() {
 
-        String tempHash;
+
         Scanner scanner= new Scanner(System.in);
 
         System.out.println("Sign hash: ");
-        tempHash= scanner.nextLine();
-        for(Block block : blockchain)
-        {
-            if(block.getHash().equals(tempHash))
-            {
-                block.seeBlock();
-            }
-        }
+
+        final String tempHash = scanner.nextLine();
+
+        //
+
+        blockchain.stream()
+                .filter(block -> block.getHash().equals(tempHash))
+                .findFirst()
+                .ifPresent(Block::seeBlock);
     }
 
     //case 3: Show Block by index
