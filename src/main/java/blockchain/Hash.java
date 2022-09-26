@@ -20,4 +20,10 @@ public class Hash {
         }
         return hashedTransactions;
     }
+    public StringBuilder getHashedTimestamp()
+    {
+        //return new StringBuilder
+        return null;
+    }
+
 }
