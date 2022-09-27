@@ -13,33 +13,24 @@ import java.util.*;
 
 public class Block {
     private List<Transaction> transactions;
-    private String hash;
-    private String previousHash;
-    boolean isFirst;
     private static int id;
+    private Timestamp timeOfBlockCreation;
     private BlockHeader blockHeader;
+    private static int blockchainVersion;
 
 
     public Block(){
         //core
-        this.isFirst=false;
         this.transactions=new LinkedList<>();
-        this.blockHeader=new BlockHeader();
+        this.timeOfBlockCreation= Timestamp.valueOf(LocalDateTime.now());
+        blockchainVersion=0;
         id++;
     }
 
-    public void setPreviousHash(String previousHash) {
-        this.previousHash = previousHash;
-    }
-    public void setFirst()
-    {
-        this.isFirst=true;
-        this.previousHash= null;
-    }
 
     //check Block data
     public void seeBlock() {
-        System.out.println("Hash: " + this.getHash());
+        //System.out.println("Hash: " + this.getHash());
         //System.out.println("Previous Hash: " + this.getPreviousHash());
         System.out.println("Transactions: ");
         this.getTransactions();
@@ -54,12 +45,10 @@ public class Block {
     public int getId() {
         return id;
     }
-
-    public String getHash()
+    public int getBlockchainVersion()
     {
-        return this.hash;
-    }
 
+    }
 
     //Transactions
     public void addTransactionToBlock(List<User> users)

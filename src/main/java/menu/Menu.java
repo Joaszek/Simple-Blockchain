@@ -85,7 +85,7 @@ public class Menu {
     private void addTransactionToBlock() {
 
         Block block = new Block();
-
+/*
         block.addTransactionToBlock(users);
         blockchain.add(block);
         lastBlock.setBlockHeaderTimestamp();
@@ -96,7 +96,7 @@ public class Menu {
         //setPreviousBlockHash
         lastBlock.
                 setPreviousHash(
-                        blockchain.get(blockchain.size()-2));
+                        blockchain.get(blockchain.size()-2));*/
     }
 
     //case 2: Show Block by hash
