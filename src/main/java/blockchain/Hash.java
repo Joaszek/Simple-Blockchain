@@ -10,8 +10,7 @@ import java.util.List;
 
 public class Hash {
     //to hash transactions
-    //make them power(2,n) to make binary tree
-    public List<String> hashedTransactions(List<Transaction> transactions)
+    private List<String> hashedTransactions(List<Transaction> transactions)
     {
         List<String> transactionsList = new LinkedList<String>();
         for(Transaction transaction : transactions)
@@ -22,17 +21,11 @@ public class Hash {
         }
         return transactionsList;
     }
-    public String createMerkelRoot(StringBuilder hashedTransactions)
+    private String hashTwoNodesIntoOne(String hashedTransactions)
     {
-        return Hashing.sha256().hashString(hashedTransactions.toString(),StandardCharsets.UTF_8).toString();
+        return Hashing.sha256().hashString(hashedTransactions,StandardCharsets.UTF_8).toString();
     }
-    public StringBuilder getHashedTimestamp(Timestamp timestamp)
-    {
-        StringBuilder hashedTimestamp = null;
-        hashedTimestamp.append(Hashing.sha256().hashString(String.valueOf(timestamp),StandardCharsets.UTF_8));
-        return hashedTimestamp;
-    }
-    private void changeTransactionsToTree(List<Transaction> transactions)
+    public String getMerkleRoot(List<Transaction> transactions)
     {
         List<String> hashedTransactions = new ArrayList<String>();
         hashedTransactions = hashedTransactions(transactions);
@@ -41,8 +34,33 @@ public class Hash {
         {
             hashedTransactions.add(hashedTransactions.get(hashedTransactions.size()-1));
         }
-        List<String> listOfHashedNodes = new ArrayList<String>();
-        while()
+        List<String> listOfHashedNodes = new ArrayList<>();
+        String currentTransactionToHash;
+
+
+        while(hashedTransactions.size()!=1)
+        {
+            for(int i=0;i<hashedTransactions.size();i+=2)
+            {
+                currentTransactionToHash="";
+                currentTransactionToHash +=hashedTransactions.get(i)+hashedTransactions.get(i+1);
+                currentTransactionToHash = hashTwoNodesIntoOne(currentTransactionToHash);
+                listOfHashedNodes.add(currentTransactionToHash);
+            }
+            hashedTransactions.clear();
+            hashedTransactions.addAll(listOfHashedNodes);
+            listOfHashedNodes.clear();
+        }
+
     }
+    //hashing timestamp
+    public StringBuilder getHashedTimestamp(Timestamp timestamp)
+    {
+        StringBuilder hashedTimestamp = null;
+        hashedTimestamp.append(Hashing.sha256().hashString(String.valueOf(timestamp),StandardCharsets.UTF_8));
+        return hashedTimestamp;
+    }
+    //nonce liczyć aby zdobyć poprzedni hash
+    //z nonce tworzyć nowy hash: transactions+nonce+previuoshash+timestamp
 
 }

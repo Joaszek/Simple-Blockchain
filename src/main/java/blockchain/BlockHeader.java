@@ -11,5 +11,10 @@ public class BlockHeader {
     private int difficultyTarget;
     private int nonce;
     private String previousHash;
+    public BlockHeader()
+    {
+        this.version=0;
+    }
+    public void setMerkleRoot
 
 }
