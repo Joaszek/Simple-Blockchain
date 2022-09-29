@@ -18,7 +18,7 @@ public class BlockManager {
         System.out.println("Transactions: ");
     }
 
-    public void addTransactionToBlock(List<User> users, Block block)
+    public static void addTransactionToBlock(List<User> users, Block block)
     {
         List<Transaction> transactions = new ArrayList<Transaction>();
         Scanner scanner = new Scanner(System.in);
@@ -72,7 +72,7 @@ public class BlockManager {
         block.setTransactions(transactions);
     }
 
-    private String getAndCheckIfUserExists(List<User> users, String whichUser)
+    private static String getAndCheckIfUserExists(List<User> users, String whichUser)
     {
         Scanner scanner = new Scanner(System.in);
         String userName = null;
@@ -110,7 +110,7 @@ public class BlockManager {
         return userName;
     }
 
-    private double checkIfOperationIsPossible(String user1Name) {
+    private static double checkIfOperationIsPossible(String user1Name) {
 
         Scanner scanner = new Scanner(System.in);
         double transactionValue = 0;
@@ -130,14 +130,14 @@ public class BlockManager {
         }
         return transactionValue;
     }
-    private String getTransactionName()
+    private static String getTransactionName()
     {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter Transaction Name: ");
         return scanner.nextLine();
     }
 
-    private void finalizeTransaction(String user1Name, String user2Name, List<User> users, double transactionValue)
+    private static void finalizeTransaction(String user1Name, String user2Name, List<User> users, double transactionValue)
     {
         for(User user:users)
         {
@@ -153,8 +153,8 @@ public class BlockManager {
     }
 
 
-    private Transaction newTransaction(String user1Name, String user2Name,
-                                       double transactionValue,String transactionName)
+    private static Transaction newTransaction(String user1Name, String user2Name,
+                                              double transactionValue, String transactionName)
     {
         Transaction transaction = new Transaction();
         transaction.setTransactionValue(transactionValue);
@@ -175,7 +175,7 @@ public class BlockManager {
         }
     }
 
-    private void addTransactionToWallet(String userName,Transaction transaction, List<User> users)
+    private static void addTransactionToWallet(String userName, Transaction transaction, List<User> users)
     {
         for(User user :users)
         {

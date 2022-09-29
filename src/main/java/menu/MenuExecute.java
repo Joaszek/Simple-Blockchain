@@ -1,11 +1,15 @@
 package menu;
 
+import JSON.WriteFromFile;
+import JSON.WriteToFile;
 import blockchain.Block;
 import blockchain.BlockManager;
 import blockchain.Transaction;
 import org.jetbrains.annotations.NotNull;
 import users.User;
 
+import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -41,20 +45,20 @@ public class MenuExecute implements MenuOperations
     }
 
     @Override
-    public void addTransactionToBlock() {
+    public void addTransactionsToBlock(List<User> users, List<Block> blockchain) {
         Block block = new Block();
-/*
-        block.addTransactionToBlock(users);
+        Block lastBlock =blockchain.get(blockchain.size()-1);
+        BlockManager.addTransactionToBlock(users,lastBlock );
         blockchain.add(block);
-        lastBlock.setBlockHeaderTimestamp();
-        //setPreviousBlockHeaderHash
-        lastBlock.
-                setBlockHeaderPreviousBlockHeaderHashCode(
-                        blockchain.get(blockchain.size()-2));
-        //setPreviousBlockHash
-        lastBlock.
-                setPreviousHash(
-                        blockchain.get(blockchain.size()-2));*/
+//        lastBlock.setBlockHeaderTimestamp();
+//        //setPreviousBlockHeaderHash
+//        lastBlock.
+//                setBlockHeaderPreviousBlockHeaderHashCode(
+//                        blockchain.get(blockchain.size()-2));
+//        //setPreviousBlockHash
+//        lastBlock.
+//                setPreviousHash(
+//                        blockchain.get(blockchain.size()-2));
     }
 
     @Override
@@ -64,8 +68,6 @@ public class MenuExecute implements MenuOperations
         System.out.println("Sign hash: ");
 
         final String tempHash = scanner.nextLine();
-
-        //
 
         blockchain.stream()
                 .filter(block -> block.getHash().equals(tempHash))
@@ -132,22 +134,31 @@ public class MenuExecute implements MenuOperations
     }
 
     @Override
-    public void showLastBlock() {
-
+    public void showLastBlock(Block lastBlock) {
+        BlockManager.seeBlock(lastBlock);
     }
 
     @Override
-    public void writeDataToFile() {
-
+    public void writeDataToFile(List<User> users) {
+        try {
+            WriteToFile.writeToFile((LinkedList<User>) users);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void getDataFromFile() {
-
+    public void getDataFromFile(List<User> users) {
+        WriteFromFile.writeFromFile((LinkedList<User>) users);
     }
 
     @Override
-    public void endOperations() {
+    public void endOperations(boolean loop) {
+        loop =false;
+    }
 
+    @Override
+    public Block setLastBlock(List<Block> blockchain) {
+        return blockchain.get(blockchain.size()-1);
     }
 }

@@ -1,7 +1,6 @@
 package menu;
 
 import blockchain.Block;
-import org.jetbrains.annotations.NotNull;
 import users.User;
 
 import java.util.List;
@@ -9,14 +8,14 @@ import java.util.List;
 public interface MenuOperations {
 
     public int getOption(List<Block> blockchain, List<User> users);
-    public void addTransactionToBlock();
+    public void addTransactionsToBlock(List<User> users, List<Block> blockchain);
     public void searchBlockByHash(List<Block> blockchain);
     public void searchBlockByID(List<Block> blockchain);
     public void addNewUser(List<User> users);
-    public void printUserInformation();
-    public void showLastBlock();
-    public void writeDataToFile();
-    public void getDataFromFile();
-    public void endOperations();
-
+    public void printUserInformation(List<User> users);
+    public void showLastBlock(Block lastBlock);
+    public void writeDataToFile(List<User> users);
+    public void getDataFromFile(List<User> users);
+    public void endOperations(boolean loop);
+    public Block setLastBlock(List<Block> blockchain);
 }
