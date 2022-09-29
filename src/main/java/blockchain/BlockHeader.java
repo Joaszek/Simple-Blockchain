@@ -14,7 +14,8 @@ public class BlockHeader {
     public BlockHeader()
     {
         this.version=0;
+        this.nonce=0;
     }
-    public void setMerkleRoot
+
 
 }

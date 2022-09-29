@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class Menu {
     private List<Block> blockchain;
@@ -18,30 +17,32 @@ public class Menu {
     private String tempHash, name;
     private Block lastBlock;
     private Block secondLastBlock;
+    private MenuOperations menuOperations;
     //private final Logger logger = Logger.getLogger(String.valueOf(Menu.class));
-    public Menu()
+    public Menu(MenuOperations operations)
     {
+        this.menuOperations = operations;
         menu();
     }
     private void menu()
     {
+
         boolean loop = true;
         while(loop)
         {
             //get option from menu
-            int option = getOption(blockchain, users);
+            int option = menuOperations.getOption(blockchain, users);
 
             switch (option)            {
-                case 1-> addTransactionToBlock();
-                case 2-> searchBlockByHash();
-                case 3-> searchBlockByID();
-                case 4-> addNewUser();
-                case 5-> printUserInformation();
-                case 6-> showLastBlock(lastBlock);
-                case 7-> writeDataToFile(users);
-                case 8-> getDataFromFile();
-                case 9-> endLoop(loop);
-
+                case 1-> menuOperations.addTransactionToBlock();
+                case 2-> menuOperations.searchBlockByHash(blockchain);
+                case 3-> menuOperations.searchBlockByID(blockchain);
+                case 4-> menuOperations.addNewUser( users);
+                case 5-> menuOperations.printUserInformation();
+                case 6-> menuOperations.showLastBlock();
+                case 7-> menuOperations.writeDataToFile();
+                case 8-> menuOperations.getDataFromFile();
+                case 9-> menuOperations.endOperations();
 
                 default -> {
                     throw new RuntimeException("Unsupported option: " + option);
@@ -50,104 +51,9 @@ public class Menu {
         }
     }
 
-    //get resposne from the user
-    private int getOption(@NotNull List<Block> blockchain, @NotNull List<User> users) {
-
-        int sizeOfBlockchain = blockchain.size();
-        int sizeOfUsers = users.size();
-
-
-        Scanner scanner= new Scanner(System.in);
-        int option;
-        System.out.println("Current number of blocks:" + sizeOfBlockchain);
-        System.out.println("Current number of users: "+ sizeOfUsers);
-        System.out.println("Menu:");
-        System.out.println("1. Add transactions to block");
-        System.out.println("2. Show block by hash: ");
-        System.out.println("3. Show block by index: ");
-        System.out.println("4. Create users");
-        System.out.println("5. Show user by name");
-        System.out.println("6. Show last block");
-        System.out.println("7. Send users to UsersDoc.json");
-        System.out.println("8. Write from file");
-        System.out.println("9. Quit");
-        System.out.println("Choice: ");
-
-        option = scanner.nextInt();
-
-        //logger.info("Current number of users")
-
-        return option;
-
-    }
-
-    //case 1: add transactions to block
-    private void addTransactionToBlock() {
-
-        Block block = new Block();
-/*
-        block.addTransactionToBlock(users);
-        blockchain.add(block);
-        lastBlock.setBlockHeaderTimestamp();
-        //setPreviousBlockHeaderHash
-        lastBlock.
-                setBlockHeaderPreviousBlockHeaderHashCode(
-                        blockchain.get(blockchain.size()-2));
-        //setPreviousBlockHash
-        lastBlock.
-                setPreviousHash(
-                        blockchain.get(blockchain.size()-2));*/
-    }
-
-    //case 2: Show Block by hash
-    private void searchBlockByHash() {
-
-
-        Scanner scanner= new Scanner(System.in);
-
-        System.out.println("Sign hash: ");
-
-        final String tempHash = scanner.nextLine();
-
-        //
-
-        blockchain.stream()
-                .filter(block -> block.getHash().equals(tempHash))
-                .findFirst()
-                .ifPresent(Block::seeBlock);
-    }
-
-    //case 3: Show Block by index
-    private void searchBlockByID() {
-        Scanner scanner = new Scanner(System.in);
-        int choice;
-
-        System.out.println("Enter ID: ");
-        choice= scanner.nextInt();
-        for(Block block : blockchain)
-        {
-            if(block.getId()==choice)
-            {
-                block.seeBlock();
-            }
-        }
-    }
-
 
     //case 4: Create users
     private void addNewUser() {
-        /*
-        users.add(new User());
-        if(user1.returnID()==3)
-        {
-            //set first balance for 1000
-            users.get(0).setName();
-            users.get(0).setFirstBalance();
-            return;
-        }
-        //set others balance for 0
-        users.get(users.size()-1).setName();
-        users.get(users.size()-1).setWallet();*/
 
     }
 
@@ -179,7 +85,7 @@ public class Menu {
     }
     //case 6: show last block info
     private void showLastBlock(Block lastBlock) {
-        lastBlock.seeBlock();
+        BlockManager.seeBlock(lastBlock);
     }
 
     //case 7: Send users to UsersDoc.json

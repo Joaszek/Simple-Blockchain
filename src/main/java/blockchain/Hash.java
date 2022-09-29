@@ -51,7 +51,7 @@ public class Hash {
             hashedTransactions.addAll(listOfHashedNodes);
             listOfHashedNodes.clear();
         }
-
+        return hashedTransactions.get(0);
     }
     //hashing timestamp
     public StringBuilder getHashedTimestamp(Timestamp timestamp)
@@ -60,7 +60,21 @@ public class Hash {
         hashedTimestamp.append(Hashing.sha256().hashString(String.valueOf(timestamp),StandardCharsets.UTF_8));
         return hashedTimestamp;
     }
-    //nonce liczyć aby zdobyć poprzedni hash
-    //z nonce tworzyć nowy hash: transactions+nonce+previuoshash+timestamp
-
+    public void mine(int nonce, String previousHash)
+    {
+        while(!Hashing.sha256().hashString(String.valueOf(nonce),
+                StandardCharsets.UTF_8).toString().equals(previousHash))
+        {
+            nonce++;
+        }
+    }
+    public String createBlockHash(int nonce, String previousHash, String merkleRoot, String timeStamp)
+    {
+        return Hashing.sha256().hashString(
+                String.valueOf(nonce)
+                +previousHash
+                +timeStamp
+                +merkleRoot,
+                StandardCharsets.UTF_8).toString();
+    }
 }
