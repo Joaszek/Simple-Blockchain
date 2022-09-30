@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public class Transaction {
     private String transactionName;
     private double transactionValue;
-    private Timestamp timestamp;
+    private LocalDateTime dateTime;
 
 
     public String getTransactionName() {
@@ -25,11 +25,13 @@ public class Transaction {
         this.transactionValue = transactionValue;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
     public void setTimestamp() {
-        this.timestamp= Timestamp.valueOf(LocalDateTime.now());
+        this.dateTime= LocalDateTime.now();
     }
+
+
 }

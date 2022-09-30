@@ -4,22 +4,21 @@ import blockchain.*;
 
 import users.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Menu {
-    private List<Block> blockchain;
-    private List<User> users;
-    private String tempHash, name;
-    private Block lastBlock;
-    private Block secondLastBlock;
-    private MenuOperations menuOperations;
-    //private final Logger logger = Logger.getLogger(String.valueOf(Menu.class));
+    private final MenuOperations menuOperations;
     public Menu(MenuOperations operations)
     {
         this.menuOperations = operations;
         menu();
     }
     private void menu() {
+
+        List<Block> blockchain = new ArrayList<Block>();
+        List<User> users = new ArrayList<User>();
+        Block lastBlock;
 
         boolean loop = true;
         while (loop) {

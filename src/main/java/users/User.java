@@ -2,9 +2,7 @@ package users;
 
 import blockchain.Transaction;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Scanner;
 
 
@@ -15,7 +13,7 @@ public class User {
     private Wallet wallet=new Wallet();
     public User()
     {
-        idNumber++;
+        //idNumber++;
     }
 
     //Creating user
@@ -76,5 +74,13 @@ public class User {
     public void addWalletTransaction(Transaction transaction)
     {
         this.wallet.addTransactions(transaction);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", wallet=" + wallet +
+                '}';
     }
 }

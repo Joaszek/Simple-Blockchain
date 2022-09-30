@@ -2,9 +2,8 @@ package users;
 
 import blockchain.Transaction;
 
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
+
 
 public class Wallet {
     private LinkedList<Transaction> transactions;
@@ -34,4 +33,11 @@ public class Wallet {
         this.balance += balance;
     }
 
+    @Override
+    public String toString() {
+        return "Wallet{" +
+                "transactions=" + transactions +
+                ", balance=" + balance +
+                '}';
+    }
 }

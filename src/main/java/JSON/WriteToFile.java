@@ -35,7 +35,7 @@ public class WriteToFile {
             for (Transaction transaction : user.getWalletTransactions()) {
                 tempTransaction.put("Transaction Name: ", transaction.getTransactionName());
                 tempTransaction.put("Transaction Value: ", transaction.getTransactionValue());
-                tempTransaction.put("Transaction time: ", transaction.getTimestamp().toString());
+                tempTransaction.put("Transaction time: ", transaction.getDateTime().toString());
                 tempUser.put("Transaction nr " + iterator, tempTransaction);
                 iterator++;
             }

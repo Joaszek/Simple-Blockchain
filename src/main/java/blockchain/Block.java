@@ -1,11 +1,5 @@
 package blockchain;
 
-
-import users.User;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -13,20 +7,22 @@ import java.util.*;
 
 public class Block {
 
-    private List<Transaction> transactions;
-    private static int id;
-    private Timestamp timeOfBlockCreation;
+    private List<Transaction> transactions = new LinkedList<>();
+    private final LocalDateTime timeOfBlockCreation = LocalDateTime.now();
     private BlockHeader blockHeader;
-    private static int blockchainVersion;
+    private static int blockchainVersion=0;
+
+    public UUID getBlockID() {
+        return blockID;
+    }
+
+    private final UUID blockID;
 
     private String hash;
 
     public Block(){
-        //core
-        this.transactions=new LinkedList<>();
-        this.timeOfBlockCreation= Timestamp.valueOf(LocalDateTime.now());
-        blockchainVersion=0;
-        id++;
+
+        this.blockID=UUID.randomUUID();
     }
     public List<Transaction> getTransactions() {
         return transactions;
@@ -36,10 +32,7 @@ public class Block {
         this.transactions = transactions;
     }
 
-    public static int getId() {
-        return id;
-    }
-    public Timestamp getTimeOfBlockCreation() {
+    public LocalDateTime getTimeOfBlockCreation() {
         return timeOfBlockCreation;
     }
     public BlockHeader getBlockHeader() {

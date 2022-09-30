@@ -39,8 +39,6 @@ public class MenuExecute implements MenuOperations
 
         option = scanner.nextInt();
 
-        //logger.info("Current number of users")
-
         return option;
     }
 
@@ -48,17 +46,7 @@ public class MenuExecute implements MenuOperations
     public void addTransactionsToBlock(List<User> users, List<Block> blockchain) {
         Block block = new Block();
         Block lastBlock =blockchain.get(blockchain.size()-1);
-        BlockManager.addTransactionToBlock(users,lastBlock );
-        blockchain.add(block);
-//        lastBlock.setBlockHeaderTimestamp();
-//        //setPreviousBlockHeaderHash
-//        lastBlock.
-//                setBlockHeaderPreviousBlockHeaderHashCode(
-//                        blockchain.get(blockchain.size()-2));
-//        //setPreviousBlockHash
-//        lastBlock.
-//                setPreviousHash(
-//                        blockchain.get(blockchain.size()-2));
+        Block penultimateBlock = blockchain.get(blockchain.size()-2);
     }
 
     @Override
@@ -82,11 +70,11 @@ public class MenuExecute implements MenuOperations
 
         System.out.println("Enter ID: ");
         choice= scanner.nextInt();
-        for(Block block : blockchain)
+        //for(Block block : blockchain)
         {
-            if(block.getId()==choice)
+           // if(block.getBlockID()==choice)
             {
-                BlockManager.seeBlock(block);
+                //BlockManager.seeBlock(block);
             }
         }
     }
@@ -110,8 +98,6 @@ public class MenuExecute implements MenuOperations
     @Override
     public void printUserInformation(List<User> users) {
         String name;
-        //works
-        //to take enter
         Scanner scanner = new Scanner(System.in);
         scanner.nextLine();
         System.out.println("Name: ");
@@ -120,6 +106,7 @@ public class MenuExecute implements MenuOperations
         {
             if(user.getName().equals(name))
             {
+                //System.out.println(user);
                 System.out.println("Name: "+ user.getName());
                 System.out.println("Wallet: "+ user.getWalletBalance());
                 System.out.println("Transactions: ");
@@ -127,7 +114,7 @@ public class MenuExecute implements MenuOperations
                 {
                     System.out.println("Name: "+transaction.getTransactionName());
                     System.out.println("Value: "+transaction.getTransactionValue());
-                    System.out.println("Time: "+transaction.getTimestamp());
+                    System.out.println("Time: "+transaction.getDateTime());
                 }
             }
         }

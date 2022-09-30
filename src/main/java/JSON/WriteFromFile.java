@@ -9,11 +9,14 @@ import users.User;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 
 public class WriteFromFile {
     @SuppressWarnings("unchecked")
     public static void writeFromFile(LinkedList<User> users) {
+        //InputStream is =  WriteFromFile.class.getClassLoader().getResourceAsStream("/resource/test.txt");
+
         User tempUser;
         JSONParser jsonParser = new JSONParser();
         try (FileReader reader = new FileReader("C:\\Users\\jszewior\\Downloads\\Simple Blockchain\\src\\main\\java\\JSON\\writeFromFile.json")) {
@@ -23,12 +26,12 @@ public class WriteFromFile {
             jsonArray.forEach(user->parseUsersObjects( (JSONObject) user));
         } catch (FileNotFoundException e)
         {
-            e.printStackTrace();
+            //e.printStackTrace(); zamien na loggera
         }  catch (ParseException e)
         {
             e.printStackTrace();
         }catch (IOException e ) {
-            e.printStackTrace();
+//e.printStackTrace(); zamien na loggera        }
         }
 
     }

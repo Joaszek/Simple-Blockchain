@@ -1,5 +1,6 @@
 package blockchain;
 
+import hashing.Hash;
 import users.User;
 
 import java.util.ArrayList;
@@ -7,17 +8,21 @@ import java.util.List;
 import java.util.Scanner;
 
 public class BlockManager {
+
+    //print Information about Block
     public static void seeBlock(Block block)
     {
-        System.out.println("Block ID: ");
+        System.out.println("Block ID: " + block.getBlockID());
         System.out.println("Status: ");
-        System.out.println("Timestamp: ");
-        System.out.println("Difficulty: ");
+        System.out.println("Timestamp: " + block.getBlockHeader().getTimeStamp());
+        System.out.println("Difficulty: " + block.getBlockHeader().getDifficultyTarget());
         System.out.println("Size: ");
         System.out.println("Time used to mine: ");
         System.out.println("Transactions: ");
+        printTransactions(block);
     }
 
+    //add Transaction to the block
     public static void addTransactionToBlock(List<User> users, Block block)
     {
         List<Transaction> transactions = new ArrayList<Transaction>();
@@ -26,7 +31,6 @@ public class BlockManager {
         String user1Name, user2Name, transactionName;
         boolean quit=true;
 
-        int option;
         while(quit)
         {
             System.out.println("TRANSACTION");
@@ -72,6 +76,8 @@ public class BlockManager {
         block.setTransactions(transactions);
     }
 
+
+    //check if user exists, if not then create one
     private static String getAndCheckIfUserExists(List<User> users, String whichUser)
     {
         Scanner scanner = new Scanner(System.in);
@@ -110,6 +116,8 @@ public class BlockManager {
         return userName;
     }
 
+
+    //check if balance of the sender is enough to run the transaction
     private static double checkIfOperationIsPossible(String user1Name) {
 
         Scanner scanner = new Scanner(System.in);
@@ -122,6 +130,7 @@ public class BlockManager {
         {
             throw new RuntimeException("Unsupported value: " + transactionValue);
         }
+        //if transactionValue is negative or equal 0
         while(transactionValue<=0)
         {
             System.out.println("Transaction value should be greater than 0");
@@ -130,6 +139,10 @@ public class BlockManager {
         }
         return transactionValue;
     }
+
+
+
+    //get the name of the transaction
     private static String getTransactionName()
     {
         Scanner scanner = new Scanner(System.in);
@@ -137,24 +150,28 @@ public class BlockManager {
         return scanner.nextLine();
     }
 
+    //change the balance of the users
     private static void finalizeTransaction(String user1Name, String user2Name, List<User> users, double transactionValue)
     {
         for(User user:users)
         {
             if(user.getName().equals(user1Name))
             {
+                //user that is sending the money
                 user.give(transactionValue);
             }
             else if(user.getName().equals(user2Name))
             {
+                //user that is receiving money
                 user.receive(transactionValue);
             }
         }
     }
 
-
+    //create new transaction
     private static Transaction newTransaction(String user1Name, String user2Name,
-                                              double transactionValue, String transactionName)
+                                              double transactionValue,
+                                              String transactionName)
     {
         Transaction transaction = new Transaction();
         transaction.setTransactionValue(transactionValue);
@@ -163,18 +180,18 @@ public class BlockManager {
         return transaction;
     }
 
-    public void printTransactions(Block block) {
+    //print the information about the transactions in the block
+    public static  void printTransactions(Block block) {
 
         for(Transaction transaction: block.getTransactions())
         {
-            //do poprawy
-            //Transactions: [blockchain.Transaction@78e03bb5, blockchain.Transaction@5e8c92f4]
             System.out.println("Name: "+transaction.getTransactionName());
             System.out.println("Value: "+ transaction.getTransactionValue());
-            System.out.println("Time: "+ transaction.getTimestamp());
+            System.out.println("Time: "+ transaction.getDateTime());
         }
     }
 
+    //add transaction to wallet of the user
     private static void addTransactionToWallet(String userName, Transaction transaction, List<User> users)
     {
         for(User user :users)
@@ -185,5 +202,18 @@ public class BlockManager {
                 return;
             }
         }
+    }
+    //create and set hash of the block
+    public static void signBlockWithHash(Block block, String previousHash)
+    {
+        Hash hash = new Hash();
+        String merkleRoot = hash.getMerkleRoot(block.getTransactions());
+        hash.mine(block.getBlockHeader().getNonce(), previousHash);
+        block.setHash(hash.createBlockHash(
+                block.getBlockHeader().getNonce(),
+                previousHash,
+                merkleRoot,
+                block.getBlockHeader().getTimeStamp()
+        ));
     }
 }
