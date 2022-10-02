@@ -16,8 +16,8 @@ public class Menu {
     }
     private void menu() {
 
-        List<Block> blockchain = new ArrayList<Block>();
-        List<User> users = new ArrayList<User>();
+        List<Block> blockchain = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         Block lastBlock;
 
         boolean loop = true;

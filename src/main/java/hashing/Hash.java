@@ -1,10 +1,6 @@
 package hashing;
 
 import blockchain.Transaction;
-import com.google.common.hash.Hashing;
-
-import java.nio.charset.StandardCharsets;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,17 +11,16 @@ public class Hash {
     {
         List<String> transactionsList = new LinkedList<String>();
         for(Transaction transaction : transactions)
-        {/*
-            String.valueOf(transaction.getDateTime()
+        {
             transactionsList.add(HashStrings.hash(transaction.getTransactionName()));
-            transactionsList.add(String.valueOf(transaction.getTransactionValue());
-            transactionsList.add(HashStrings.hash(transaction.getTransactionName());*/
+            transactionsList.add(HashStrings.hash(String.valueOf(transaction.getTransactionValue())));
+            transactionsList.add(HashStrings.hash(String.valueOf(transaction.getDateTime())));
         }
         return transactionsList;
     }
     private String hashTwoNodesIntoOne(String hashedTransactions)
     {
-        return Hashing.sha256().hashString(hashedTransactions,StandardCharsets.UTF_8).toString();
+        return HashStrings.hash(hashedTransactions);
     }
     public String getMerkleRoot(List<Transaction> transactions)
     {
@@ -57,8 +52,7 @@ public class Hash {
 
     public int mine(int nonce, String previousHash)
     {
-        while(!Hashing.sha256().hashString(String.valueOf(nonce),
-                StandardCharsets.UTF_8).toString().equals(previousHash))
+        while(HashStrings.hash(String.valueOf(nonce)).equals(previousHash))
         {
             nonce++;
         }
@@ -67,11 +61,9 @@ public class Hash {
     public String createBlockHash(int nonce, String previousHash,
                                   String merkleRoot, StringBuilder timeStamp)
     {
-        return Hashing.sha256().hashString(
-                String.valueOf(nonce)
+        return HashStrings.hash(String.valueOf(nonce)
                 +previousHash
                 +timeStamp
-                +merkleRoot,
-                StandardCharsets.UTF_8).toString();
+                +merkleRoot);
     }
 }

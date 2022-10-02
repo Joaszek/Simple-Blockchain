@@ -25,4 +25,7 @@ public class BlockHeader {
     {
         return this.nonce;
     }
+    public void setDifficultyTarget(int difficultyTarget) {
+        this.difficultyTarget = difficultyTarget;
+    }
 }

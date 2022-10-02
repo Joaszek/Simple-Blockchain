@@ -8,8 +8,7 @@ import menu.MenuExecute;
 
 public class Main {
     public static void main(String[]Args){
-        MenuExecute menuOperations = new MenuExecute();
-        new Menu(menuOperations);
+        new Menu(new MenuExecute());
     }
 
 

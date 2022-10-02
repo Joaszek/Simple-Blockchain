@@ -17,7 +17,7 @@ public class MenuExecute implements MenuOperations
 {
 
     @Override
-    public int getOption(List<Block> blockchain, @NotNull List<User> users) {
+    public int getOption(@NotNull List<Block> blockchain, @NotNull List<User> users) {
         int sizeOfBlockchain = blockchain.size();
         int sizeOfUsers = users.size();
 
@@ -46,7 +46,8 @@ public class MenuExecute implements MenuOperations
     public void addTransactionsToBlock(List<User> users, List<Block> blockchain) {
         Block block = new Block();
         Block lastBlock =blockchain.get(blockchain.size()-1);
-        Block penultimateBlock = blockchain.get(blockchain.size()-2);
+        //Block penultimateBlock = blockchain.get(blockchain.size()-2);
+        BlockManager.addTransactionToBlock(users,block);
     }
 
     @Override

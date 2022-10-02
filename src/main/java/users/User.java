@@ -2,6 +2,7 @@ package users;
 
 import blockchain.Transaction;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -39,11 +40,11 @@ public class User {
 
     //Balance
 
-    public void receive(double money)
+    public void receive(BigDecimal money)
     {
         this.wallet.setBalance(money);
     }
-    public void give(double price)
+    public void give(BigDecimal price)
     {
         this.wallet.setBalance(-price);
     }

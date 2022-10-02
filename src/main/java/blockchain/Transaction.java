@@ -1,6 +1,6 @@
 package blockchain;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Transaction {
@@ -21,7 +21,7 @@ public class Transaction {
         return transactionValue;
     }
 
-    public void setTransactionValue(double transactionValue) {
+    public void setTransactionValue(BigDecimal transactionValue) {
         this.transactionValue = transactionValue;
     }
 

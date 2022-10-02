@@ -3,6 +3,7 @@ package blockchain;
 import hashing.Hash;
 import users.User;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,48 +26,48 @@ public class BlockManager {
     //add Transaction to the block
     public static void addTransactionToBlock(List<User> users, Block block)
     {
-        List<Transaction> transactions = new ArrayList<Transaction>();
+        List<Transaction> transactions = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
-        double transactionValue;
-        String user1Name, user2Name, transactionName;
+        BigDecimal transactionValue;
+        String sender, receiver, transactionName;
         boolean quit=true;
 
         while(quit)
         {
             System.out.println("TRANSACTION");
 
-            user1Name=getAndCheckIfUserExists(users,"Sender");
+            sender=getAndCheckIfUserExists(users,"Sender");
 
-            user2Name=getAndCheckIfUserExists(users,"Receiver");
+            receiver=getAndCheckIfUserExists(users,"Receiver");
 
-            transactionValue=checkIfOperationIsPossible(user1Name);
+            transactionValue=checkIfOperationIsPossible(sender);
 
             transactionName=getTransactionName();
 
-            finalizeTransaction(user1Name, user2Name,users,transactionValue);
+            finalizeTransaction(sender, receiver,users,transactionValue);
 
 
             transactions.add(
                     newTransaction(
-                            user1Name,
-                            user2Name,
+                            sender,
+                            receiver,
                             transactionValue,
                             transactionName));
 
-            addTransactionToWallet(user1Name,
+            addTransactionToWallet(sender,
                     newTransaction(
-                            user1Name,
-                            user2Name,
-                            transactionValue,
+                            sender,
+                            receiver,
+                            transactionValue.negate(),
                             transactionName),
                     users);
 
             addTransactionToWallet(
-                    user2Name,
+                    receiver,
                     newTransaction(
-                            user2Name,
-                            user1Name,
-                            -1*transactionValue,
+                            receiver,
+                            sender,
+                            transactionValue,
                             transactionName),
                     users);
         }
@@ -118,24 +119,24 @@ public class BlockManager {
 
 
     //check if balance of the sender is enough to run the transaction
-    private static double checkIfOperationIsPossible(String user1Name) {
+    private static BigDecimal checkIfOperationIsPossible(String sender) {
 
         Scanner scanner = new Scanner(System.in);
-        double transactionValue = 0;
+        BigDecimal transactionValue = new BigDecimal(0);
 
         System.out.println("Enter Transaction Value: ");
         try {
-            transactionValue = scanner.nextDouble();
+            transactionValue = scanner.nextBigDecimal();
         }catch (Exception e)
         {
             throw new RuntimeException("Unsupported value: " + transactionValue);
         }
         //if transactionValue is negative or equal 0
-        while(transactionValue<=0)
+        while(transactionValue.compareTo(BigDecimal.valueOf(0))<=0)
         {
             System.out.println("Transaction value should be greater than 0");
             System.out.println("Enter transactionValue: ");
-            transactionValue=scanner.nextDouble();
+            transactionValue=scanner.nextBigDecimal();
         }
         return transactionValue;
     }
@@ -151,7 +152,7 @@ public class BlockManager {
     }
 
     //change the balance of the users
-    private static void finalizeTransaction(String user1Name, String user2Name, List<User> users, double transactionValue)
+    private static void finalizeTransaction(String user1Name, String user2Name, List<User> users, BigDecimal transactionValue)
     {
         for(User user:users)
         {
@@ -170,7 +171,7 @@ public class BlockManager {
 
     //create new transaction
     private static Transaction newTransaction(String user1Name, String user2Name,
-                                              double transactionValue,
+                                              BigDecimal transactionValue,
                                               String transactionName)
     {
         Transaction transaction = new Transaction();
