@@ -5,78 +5,46 @@ import blockchain.Transaction;
 import java.math.BigDecimal;
 import java.util.LinkedList;
 import java.util.Scanner;
-
+import java.util.UUID;
 
 
 public class User {
-    private static int idNumber;
+    private UUID uuid;
     private String name;
-    private Wallet wallet=new Wallet();
-    public User()
-    {
-        //idNumber++;
+
+    public UUID getUuid() {
+        return uuid;
     }
 
-    //Creating user
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
+    }
 
     public String getName() {
         return name;
     }
-    public void setName() {
-        System.out.println("Sign name: ");
-        Scanner scanner = new Scanner(System.in);
-        this.name = scanner.nextLine();
-    }
-    public int returnID()
-    {
-        return idNumber;
-    }
-    public int getIdNumber()
-    {
-        return idNumber;
+
+    public void setName(String name) {
+        this.name = name;
     }
 
-
-
-    //Balance
-
-    public void receive(BigDecimal money)
-    {
-        this.wallet.setBalance(money);
-    }
-    public void give(BigDecimal price)
-    {
-        this.wallet.setBalance(-price);
-    }
-    public boolean checkIfCapable(Double transactionValue)
-    {
-        return !(wallet.getBalance() - transactionValue < 0);
-    }
-    public void setWallet()
-    {
-        this.wallet.setBalance(0);
-    }
-    public void setFirstBalance()
-    {
-        this.wallet.setBalance(1000);
+    public Wallet getWallet() {
+        return wallet;
     }
 
-
-    public LinkedList<Transaction> getWalletTransactions()
-    {
-        return this.wallet.getTransactions();
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 
-    public double getWalletBalance()
+    private Wallet wallet;
+    public User()
     {
-        return this.wallet.getBalance();
-    }
 
-    public void addWalletTransaction(Transaction transaction)
+    }
+    public User(boolean isFirst)
     {
-        this.wallet.addTransactions(transaction);
-    }
 
+    }
     @Override
     public String toString() {
         return "User{" +

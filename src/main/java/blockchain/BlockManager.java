@@ -7,13 +7,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class BlockManager {
 
     //print Information about Block
     public static void seeBlock(Block block)
     {
-        System.out.println("Block ID: " + block.getBlockID());
+        System.out.println("Block ID: " + block.getBlockUUID());
         System.out.println("Status: ");
         System.out.println("Timestamp: " + block.getBlockHeader().getTimeStamp());
         System.out.println("Difficulty: " + block.getBlockHeader().getDifficultyTarget());
@@ -49,15 +50,11 @@ public class BlockManager {
 
             transactions.add(
                     newTransaction(
-                            sender,
-                            receiver,
                             transactionValue,
                             transactionName));
 
             addTransactionToWallet(sender,
                     newTransaction(
-                            sender,
-                            receiver,
                             transactionValue.negate(),
                             transactionName),
                     users);
@@ -65,8 +62,6 @@ public class BlockManager {
             addTransactionToWallet(
                     receiver,
                     newTransaction(
-                            receiver,
-                            sender,
                             transactionValue,
                             transactionName),
                     users);
@@ -152,16 +147,17 @@ public class BlockManager {
     }
 
     //change the balance of the users
-    private static void finalizeTransaction(String user1Name, String user2Name, List<User> users, BigDecimal transactionValue)
+    private static void finalizeTransaction(String sender, String receiver, List<User> users, BigDecimal transactionValue)
     {
+        Us
         for(User user:users)
         {
-            if(user.getName().equals(user1Name))
+            if(user.getName().equals(sender))
             {
                 //user that is sending the money
                 user.give(transactionValue);
             }
-            else if(user.getName().equals(user2Name))
+            else if(user.getName().equals(receiver))
             {
                 //user that is receiving money
                 user.receive(transactionValue);
@@ -170,8 +166,7 @@ public class BlockManager {
     }
 
     //create new transaction
-    private static Transaction newTransaction(String user1Name, String user2Name,
-                                              BigDecimal transactionValue,
+    private static Transaction newTransaction(BigDecimal transactionValue,
                                               String transactionName)
     {
         Transaction transaction = new Transaction();
@@ -207,14 +202,30 @@ public class BlockManager {
     //create and set hash of the block
     public static void signBlockWithHash(Block block, String previousHash)
     {
-        Hash hash = new Hash();
-        String merkleRoot = hash.getMerkleRoot(block.getTransactions());
-        hash.mine(block.getBlockHeader().getNonce(), previousHash);
-        block.setHash(hash.createBlockHash(
-                block.getBlockHeader().getNonce(),
-                previousHash,
-                merkleRoot,
-                block.getBlockHeader().getTimeStamp()
-        ));
+        int difficultyTarget = block.getBlockHeader().getDifficultyTarget();
+        int nonce = block.getBlockHeader().getNonce();
+        String merkleRoot = block.getBlockHeader().getMerkleRoot();
+        StringBuilder timeStamp = block.getBlockHeader().getTimeStamp();
+
+        block.setHash(Hash.mine(
+                block,nonce,previousHash,
+                difficultyTarget,merkleRoot,
+                timeStamp));
+    }
+
+
+    //set difficultyTarget in menu
+    public static void setDifficultyTarget()
+    {
+        int difficultyTarget;
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter difficulty target: ");
+        try{
+            difficultyTarget = scanner.nextInt();
+        }catch (Exception e)
+        {
+            throw new RuntimeException("Unsupported value for difficulty target: ");
+        }
+        BlockHeader.setDifficultyTarget(difficultyTarget);
     }
 }

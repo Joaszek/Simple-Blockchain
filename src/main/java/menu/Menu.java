@@ -19,7 +19,7 @@ public class Menu {
         List<Block> blockchain = new ArrayList<>();
         List<User> users = new ArrayList<>();
         Block lastBlock;
-
+        BlockManager.setDifficultyTarget();
         boolean loop = true;
         while (loop) {
             //get option from menu
@@ -28,7 +28,7 @@ public class Menu {
             switch (option) {
                 case 1 -> menuOperations.addTransactionsToBlock(users, blockchain);
                 case 2 -> menuOperations.searchBlockByHash(blockchain);
-                case 3 -> menuOperations.searchBlockByID(blockchain);
+                case 3 -> menuOperations.searchBlockByUUID(blockchain);
                 case 4 -> menuOperations.addNewUser(users);
                 case 5 -> menuOperations.printUserInformation(users);
                 case 6 -> menuOperations.showLastBlock(lastBlock);

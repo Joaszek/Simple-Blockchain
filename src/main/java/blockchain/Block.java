@@ -11,7 +11,7 @@ public class Block {
     private BlockHeader blockHeader;
     private static int blockchainVersion=0;
 
-    public UUID getBlockID() {
+    public UUID getBlockUUID() {
         return blockID;
     }
 

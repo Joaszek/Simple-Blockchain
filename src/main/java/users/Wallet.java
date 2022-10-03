@@ -2,12 +2,13 @@ package users;
 
 import blockchain.Transaction;
 
+import java.math.BigDecimal;
 import java.util.LinkedList;
 
 
 public class Wallet {
     private LinkedList<Transaction> transactions;
-    private double balance;
+    private BigDecimal balance;
 
 
 
@@ -25,12 +26,12 @@ public class Wallet {
         this.transactions.add(transaction);
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
-        this.balance += balance;
+    public void addBalance(BigDecimal balance) {
+        this.balance.add(balance);
     }
 
     @Override

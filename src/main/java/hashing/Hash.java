@@ -1,5 +1,6 @@
 package hashing;
 
+import blockchain.Block;
 import blockchain.Transaction;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -50,15 +51,21 @@ public class Hash {
         return hashedTransactions.get(0);
     }
 
-    public int mine(int nonce, String previousHash)
+    public static String mine(Block block,int nonce, String previousHash, int difficultyTarget, String merkleRoot, StringBuilder timeStamp)
     {
-        while(HashStrings.hash(String.valueOf(nonce)).equals(previousHash))
+        String subStringOfPreviousHash= previousHash.substring(0, difficultyTarget);
+        String subStringOfCurrentHash=createBlockHash(nonce,previousHash,merkleRoot, timeStamp).substring(0,difficultyTarget);
+        String finalHash=null;
+        while(!subStringOfCurrentHash.equals(subStringOfPreviousHash))
         {
+            finalHash = createBlockHash(nonce,previousHash,merkleRoot, timeStamp);
+            subStringOfCurrentHash= finalHash.substring(0,difficultyTarget);
             nonce++;
         }
-        return nonce;
+        block.getBlockHeader().setNonce(nonce);
+        return finalHash;
     }
-    public String createBlockHash(int nonce, String previousHash,
+    private static String createBlockHash(int nonce, String previousHash,
                                   String merkleRoot, StringBuilder timeStamp)
     {
         return HashStrings.hash(String.valueOf(nonce)

@@ -5,6 +5,7 @@ import JSON.WriteToFile;
 import blockchain.Block;
 import blockchain.BlockManager;
 import blockchain.Transaction;
+import hashing.Hash;
 import org.jetbrains.annotations.NotNull;
 import users.User;
 
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class MenuExecute implements MenuOperations
 {
@@ -45,16 +47,21 @@ public class MenuExecute implements MenuOperations
     @Override
     public void addTransactionsToBlock(List<User> users, List<Block> blockchain) {
         Block block = new Block();
+        Hash hash = new Hash();
         Block lastBlock =blockchain.get(blockchain.size()-1);
-        //Block penultimateBlock = blockchain.get(blockchain.size()-2);
+
         BlockManager.addTransactionToBlock(users,block);
+        block.getBlockHeader().setMerkleRoot(hash.getMerkleRoot(block.getTransactions()));
+        BlockManager.signBlockWithHash(block, lastBlock.getHash());
+        blockchain.add(block);
+        System.out.println("Block was successfully added to blockchain.");
     }
 
     @Override
     public void searchBlockByHash(List<Block> blockchain) {
         Scanner scanner= new Scanner(System.in);
 
-        System.out.println("Sign hash: ");
+        System.out.println("Enter hash: ");
 
         final String tempHash = scanner.nextLine();
 
@@ -65,17 +72,18 @@ public class MenuExecute implements MenuOperations
     }
 
     @Override
-    public void searchBlockByID(List<Block> blockchain) {
+    public void searchBlockByUUID(List<Block> blockchain) {
         Scanner scanner = new Scanner(System.in);
-        int choice;
 
-        System.out.println("Enter ID: ");
-        choice= scanner.nextInt();
-        //for(Block block : blockchain)
+        System.out.println("Enter UUID: ");
+        String uuidString= scanner.nextLine();
+
+        for(Block block : blockchain)
         {
-           // if(block.getBlockID()==choice)
+            if(block.getBlockUUID().
+                    compareTo(UUID.fromString(uuidString))==0)
             {
-                //BlockManager.seeBlock(block);
+                BlockManager.seeBlock(block);
             }
         }
     }
@@ -83,24 +91,12 @@ public class MenuExecute implements MenuOperations
     @Override
     public void addNewUser(List<User> users) {
         users.add(new User());
-        if(true)
-        {
-            //set first balance for 1000
-            users.get(0).setName();
-            users.get(0).setFirstBalance();
-            return;
-        }
-        //set others balance for 0
-        users.get(users.size()-1).setName();
-        users.get(users.size()-1).setWallet();
-
     }
 
     @Override
     public void printUserInformation(List<User> users) {
         String name;
         Scanner scanner = new Scanner(System.in);
-        scanner.nextLine();
         System.out.println("Name: ");
         name = scanner.nextLine();
         for(User user : users)
@@ -108,15 +104,6 @@ public class MenuExecute implements MenuOperations
             if(user.getName().equals(name))
             {
                 //System.out.println(user);
-                System.out.println("Name: "+ user.getName());
-                System.out.println("Wallet: "+ user.getWalletBalance());
-                System.out.println("Transactions: ");
-                for(Transaction transaction :user.getWalletTransactions())
-                {
-                    System.out.println("Name: "+transaction.getTransactionName());
-                    System.out.println("Value: "+transaction.getTransactionValue());
-                    System.out.println("Time: "+transaction.getDateTime());
-                }
             }
         }
     }
@@ -148,5 +135,15 @@ public class MenuExecute implements MenuOperations
     @Override
     public Block setLastBlock(List<Block> blockchain) {
         return blockchain.get(blockchain.size()-1);
+    }
+
+    @Override
+    public void createFirstUser(List<User> users) {
+        users.add(new User(true));
+    }
+
+    @Override
+    public void createFirstBlock(List<Block> blockchain) {
+
     }
 }
