@@ -1,13 +1,14 @@
 package blockchain;
 
+import logger.Logger;
 import hashing.Hash;
 import users.User;
+import users.UserManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class BlockManager {
 
@@ -84,7 +85,7 @@ public class BlockManager {
             userName = scanner.nextLine();
         }catch (Exception e)
         {
-            throw new RuntimeException("Unsupported name: " + userName);
+            Logger.printError(e,BlockManager.class);
         }
         for(User user : users)
         {
@@ -124,7 +125,7 @@ public class BlockManager {
             transactionValue = scanner.nextBigDecimal();
         }catch (Exception e)
         {
-            throw new RuntimeException("Unsupported value: " + transactionValue);
+            Logger.printError(e,BlockManager.class);
         }
         //if transactionValue is negative or equal 0
         while(transactionValue.compareTo(BigDecimal.valueOf(0))<=0)
@@ -149,18 +150,18 @@ public class BlockManager {
     //change the balance of the users
     private static void finalizeTransaction(String sender, String receiver, List<User> users, BigDecimal transactionValue)
     {
-        Us
+        UserManager userManager = new UserManager();
         for(User user:users)
         {
             if(user.getName().equals(sender))
             {
                 //user that is sending the money
-                user.give(transactionValue);
+                userManager.give(user, transactionValue);
             }
             else if(user.getName().equals(receiver))
             {
                 //user that is receiving money
-                user.receive(transactionValue);
+                userManager.receive(user, transactionValue);
             }
         }
     }
@@ -190,12 +191,12 @@ public class BlockManager {
     //add transaction to wallet of the user
     private static void addTransactionToWallet(String userName, Transaction transaction, List<User> users)
     {
+        UserManager userManager = new UserManager();
         for(User user :users)
         {
             if(user.getName().equals(userName))
             {
-                user.addWalletTransaction(transaction);
-                return;
+                userManager.addWalletTransaction(user,transaction);
             }
         }
     }

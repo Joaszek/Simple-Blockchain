@@ -6,6 +6,7 @@ import blockchain.Block;
 import blockchain.BlockManager;
 import blockchain.Transaction;
 import hashing.Hash;
+import logger.Logger;
 import org.jetbrains.annotations.NotNull;
 import users.User;
 
@@ -22,9 +23,10 @@ public class MenuExecute implements MenuOperations
     public int getOption(@NotNull List<Block> blockchain, @NotNull List<User> users) {
         int sizeOfBlockchain = blockchain.size();
         int sizeOfUsers = users.size();
-
+        boolean isValid=false;
         Scanner scanner= new Scanner(System.in);
-        int option;
+
+        String option;
         System.out.println("Current number of blocks:" + sizeOfBlockchain);
         System.out.println("Current number of users: "+ sizeOfUsers);
         System.out.println("Menu:");
@@ -38,10 +40,13 @@ public class MenuExecute implements MenuOperations
         System.out.println("8. Write from file");
         System.out.println("9. Quit");
         System.out.println("Choice: ");
+        option = scanner.next();
+        while(!isValid) {
+            isValid=checkinput(option);
+            userChoseWrongOption();
+        }
 
-        option = scanner.nextInt();
-
-        return option;
+        return Integer.parseInt(option);
     }
 
     @Override
@@ -118,7 +123,7 @@ public class MenuExecute implements MenuOperations
         try {
             WriteToFile.writeToFile((LinkedList<User>) users);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Logger.printError(e,BlockManager.class);
         }
     }
 
@@ -145,5 +150,42 @@ public class MenuExecute implements MenuOperations
     @Override
     public void createFirstBlock(List<Block> blockchain) {
 
+    }
+
+    @Override
+    public void userChoseWrongOption() {
+        int option=10;
+        Scanner scanner = new Scanner(System.in);
+
+        while(option<0||option>9)
+        {
+            System.out.println("You chose wrong option");
+            System.out.println("Enter correct option");
+            try{
+                option = scanner.nextInt();
+            }catch(NumberFormatException e)
+            {
+
+            }
+        }
+
+
+
+
+    }
+    public boolean checkinput(String input)
+    {
+        int cos;
+        try {
+            cos=Integer.parseInt(input);
+            if(cos>=0&&cos<=9)
+            {
+                return true;
+            }
+        }catch(NumberFormatException e)
+        {
+            return false;
+        }
+        return false;
     }
 }

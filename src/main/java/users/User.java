@@ -1,10 +1,7 @@
 package users;
 
-import blockchain.Transaction;
+import wallet.Wallet;
 
-import java.math.BigDecimal;
-import java.util.LinkedList;
-import java.util.Scanner;
 import java.util.UUID;
 
 

@@ -1,4 +1,4 @@
-package users;
+package wallet;
 
 import blockchain.Transaction;
 
@@ -14,6 +14,7 @@ public class Wallet {
 
     public Wallet() {
         this.transactions= new LinkedList<>();
+        this.balance= new BigDecimal(0);
     }
 
 

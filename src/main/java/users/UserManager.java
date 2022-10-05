@@ -1,6 +1,7 @@
 package users;
 
 import blockchain.Transaction;
+import wallet.Wallet;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -16,27 +17,27 @@ public class UserManager {
     }
     public void give(User user,BigDecimal price)
     {
-        this.wallet.setBalance(price.negate());
+       user.getWallet().addBalance(price.negate());
     }
-    public double getWalletBalance(User user,)
+    public BigDecimal getWalletBalance(User user)
     {
-        return this.wallet.getBalance();
+        return user.getWallet().getBalance();
     }
     public LinkedList<Transaction> getWalletTransactions(User user)
     {
-        return this.wallet.getTransactions();
+        return user.getWallet().getTransactions();
     }
     public void addWalletTransaction(User user, Transaction transaction)
     {
-        this.wallet.addTransactions(transaction);
+       user.getWallet().addTransactions(transaction);
     }
     public void setFirstBalance(User user)
     {
-        this.wallet.setBalance(BigDecimal.valueOf(1000));
+        user.getWallet().addBalance(BigDecimal.valueOf(1000));
     }
     public void setWallet(User user)
     {
-        this.wallet.setBalance(BigDecimal.valueOf(0));
+        user.setWallet(new Wallet());
     }
 
 }

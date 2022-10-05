@@ -19,6 +19,7 @@ public class WriteToFile {
     @SuppressWarnings("unchecked")
     public static void writeToFile(@NotNull LinkedList<User> users) throws IOException {
 
+        /*
         JSONObject tempUser;
         JSONObject finalTempUser;
         JSONArray jsonArray = new JSONArray();
@@ -48,7 +49,7 @@ public class WriteToFile {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
 
