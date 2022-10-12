@@ -4,6 +4,7 @@ import blockchain.*;
 
 import logger.Logger;
 import users.User;
+import wallet.Wallet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,9 @@ public class Menu {
         List<User> users = new ArrayList<>();
         Block lastBlock;
         BlockManager.setDifficultyTarget();
+        menuOperations.createFirstUser(users);
+        menuOperations.createFirstBlock(blockchain);
+
         boolean loop = true;
         while (loop) {
             //get option from menu
@@ -43,4 +47,6 @@ public class Menu {
             }
         }
     }
+
+
 }

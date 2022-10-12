@@ -5,9 +5,9 @@ import menu.Menu;
 import menu.MenuExecute;
 
 /*
-create first user in blockchain in the moment of creation
-create first block in blockchain in the moment of creation
- */
+move creation if the first uset to menu operations
+create constructors for waller with balance equal to zero and 1000
+*/
 
 public class Main {
     public static void main(String[]Args){

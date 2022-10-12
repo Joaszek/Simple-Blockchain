@@ -4,11 +4,12 @@ import JSON.WriteFromFile;
 import JSON.WriteToFile;
 import blockchain.Block;
 import blockchain.BlockManager;
-import blockchain.Transaction;
 import hashing.Hash;
+import hashing.HashStrings;
 import logger.Logger;
 import org.jetbrains.annotations.NotNull;
 import users.User;
+import users.UserManager;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -41,11 +42,18 @@ public class MenuExecute implements MenuOperations
         System.out.println("9. Quit");
         System.out.println("Choice: ");
         option = scanner.next();
+        int i=0;
         while(!isValid) {
+            System.out.println(i);
             isValid=checkinput(option);
-            userChoseWrongOption();
+            if(isValid)
+            {
+                i++;
+                System.out.println(i);
+                isValid=checkinput(String.valueOf(userChoseWrongOption()));
+            }
         }
-
+        System.out.println("wyszedł");
         return Integer.parseInt(option);
     }
 
@@ -95,7 +103,8 @@ public class MenuExecute implements MenuOperations
 
     @Override
     public void addNewUser(List<User> users) {
-        users.add(new User());
+        UserManager userManager = new UserManager();
+        users.add(userManager.createNewUser());
     }
 
     @Override
@@ -149,11 +158,14 @@ public class MenuExecute implements MenuOperations
 
     @Override
     public void createFirstBlock(List<Block> blockchain) {
-
+        Block block = new Block();
+        String hash="0";
+        block.setHash(HashStrings.hash(hash));
+        blockchain.add(block);
     }
 
     @Override
-    public void userChoseWrongOption() {
+    public int userChoseWrongOption() {
         int option=10;
         Scanner scanner = new Scanner(System.in);
 
@@ -165,9 +177,10 @@ public class MenuExecute implements MenuOperations
                 option = scanner.nextInt();
             }catch(NumberFormatException e)
             {
-
+                throw new NumberFormatException();
             }
         }
+        return option;
 
 
 

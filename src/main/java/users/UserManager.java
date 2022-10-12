@@ -5,6 +5,8 @@ import wallet.Wallet;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Scanner;
 
 public class UserManager {
     public boolean checkIfCapable(User user, BigDecimal transactionValue)
@@ -40,4 +42,12 @@ public class UserManager {
         user.setWallet(new Wallet());
     }
 
+    public User createNewUser() {
+        Scanner scanner = new Scanner(System.in);
+        User user = new User();
+        System.out.println("Enter User name");
+        user.setName(scanner.nextLine());
+        this.setWallet(user);
+        return user;
+    }
 }

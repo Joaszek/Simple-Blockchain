@@ -1,5 +1,7 @@
 package blockchain;
 
+import com.google.common.hash.Hashing;
+import hashing.HashStrings;
 import logger.Logger;
 import hashing.Hash;
 import users.User;

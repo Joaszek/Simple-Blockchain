@@ -36,11 +36,18 @@ public class User {
     private Wallet wallet;
     public User()
     {
+        UserManager userManager = new UserManager();
+        userManager.setWallet(this);
+        this.setUuid(UUID.randomUUID());
 
     }
     public User(boolean isFirst)
     {
-
+        UserManager manager = new UserManager();
+        manager.setWallet(this);
+        manager.setFirstBalance(this);
+        this.setUuid(UUID.randomUUID());
+        this.setName("Satoshi Nakamoto");
     }
     @Override
     public String toString() {
