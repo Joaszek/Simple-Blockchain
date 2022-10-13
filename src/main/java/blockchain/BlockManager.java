@@ -68,11 +68,12 @@ public class BlockManager {
                             transactionValue,
                             transactionName),
                     users);
+            System.out.println("Add new transaction(1) or quit(2)?");
+            if(scanner.nextInt()==2)quit=false;
+            block.setTransactions(transactions);
         }
 
-        System.out.println("Add new transaction(1) or quit(2)?");
-        if(scanner.nextInt()==2)quit=false;
-        block.setTransactions(transactions);
+
     }
 
 

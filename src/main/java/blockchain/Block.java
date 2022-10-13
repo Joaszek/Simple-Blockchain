@@ -22,8 +22,19 @@ public class Block {
     private String hash;
 
     public Block(){
-
         this.blockID=UUID.randomUUID();
+        this.blockHeader = new BlockHeader();
+    }
+    public Block(boolean isFirst)
+    {
+        this.blockID=UUID.randomUUID();
+        BlockHeader header = new BlockHeader();
+        header.setNonce(0);
+        header.setMerkleRoot("");
+        StringBuilder timeStamp = new StringBuilder();
+        timeStamp.append(timeOfBlockCreation);
+        header.setTimeStamp(timeStamp);
+        this.setBlockHeader(header);
     }
     public List<Transaction> getTransactions() {
         return transactions;

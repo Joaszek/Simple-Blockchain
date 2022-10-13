@@ -3,6 +3,10 @@ package blockchain;
 
 public class BlockHeader {
 
+    public void setTimeStamp(StringBuilder timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
     private StringBuilder timeStamp;
     private final int version=0;
     private String merkleRoot;

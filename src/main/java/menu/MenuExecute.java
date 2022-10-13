@@ -34,7 +34,7 @@ public class MenuExecute implements MenuOperations
         System.out.println("1. Add transactions to block");
         System.out.println("2. Show block by hash: ");
         System.out.println("3. Show block by index: ");
-        System.out.println("4. Create users");
+        System.out.println("4. Create user");
         System.out.println("5. Show user by name");
         System.out.println("6. Show last block");
         System.out.println("7. Send users to UsersDoc.json");
@@ -42,18 +42,13 @@ public class MenuExecute implements MenuOperations
         System.out.println("9. Quit");
         System.out.println("Choice: ");
         option = scanner.next();
-        int i=0;
         while(!isValid) {
-            System.out.println(i);
-            isValid=checkinput(option);
-            if(isValid)
+            isValid= checkInput(option);
+            if(!isValid)
             {
-                i++;
-                System.out.println(i);
-                isValid=checkinput(String.valueOf(userChoseWrongOption()));
+                isValid= checkInput(String.valueOf(userChoseWrongOption()));
             }
         }
-        System.out.println("wyszedł");
         return Integer.parseInt(option);
     }
 
@@ -158,7 +153,7 @@ public class MenuExecute implements MenuOperations
 
     @Override
     public void createFirstBlock(List<Block> blockchain) {
-        Block block = new Block();
+        Block block = new Block(true);
         String hash="0";
         block.setHash(HashStrings.hash(hash));
         blockchain.add(block);
@@ -186,7 +181,7 @@ public class MenuExecute implements MenuOperations
 
 
     }
-    public boolean checkinput(String input)
+    public boolean checkInput(String input)
     {
         int cos;
         try {

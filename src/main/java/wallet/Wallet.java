@@ -3,6 +3,7 @@ package wallet;
 import blockchain.Transaction;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.LinkedList;
 
 
@@ -32,7 +33,7 @@ public class Wallet {
     }
 
     public void addBalance(BigDecimal balance) {
-        this.balance.add(balance);
+        this.balance = new BigDecimal(String.valueOf(this.balance)).add(balance);
     }
 
     @Override

@@ -44,7 +44,7 @@ public class Menu {
                 default -> {
                     //Logger.printUnsupportedOption(Menu.class,);
                 }
-            }
+              }
         }
     }
 
