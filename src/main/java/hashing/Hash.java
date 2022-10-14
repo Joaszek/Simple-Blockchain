@@ -2,6 +2,9 @@ package hashing;
 
 import blockchain.Block;
 import blockchain.Transaction;
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,28 +14,36 @@ public class Hash {
     private List<String> hashedTransactions(List<Transaction> transactions)
     {
         List<String> transactionsList = new LinkedList<String>();
+        StringBuilder hashedTransaction;
         for(Transaction transaction : transactions)
         {
-            transactionsList.add(HashStrings.hash(transaction.getTransactionName()));
-            transactionsList.add(HashStrings.hash(String.valueOf(transaction.getTransactionValue())));
-            transactionsList.add(HashStrings.hash(String.valueOf(transaction.getDateTime())));
+            hashedTransaction = new StringBuilder();
+            hashedTransaction.append(HashStrings.hash(transaction.getTransactionName()));
+            hashedTransaction.append(HashStrings.hash(String.valueOf(transaction.getTransactionValue())));
+            hashedTransaction.append(HashStrings.hash(String.valueOf(transaction.getDateTime())));
+            transactionsList.add(hashedTransaction.toString());
         }
+
         return transactionsList;
     }
     private String hashTwoNodesIntoOne(String hashedTransactions)
     {
         return HashStrings.hash(hashedTransactions);
     }
-    public String getMerkleRoot(List<Transaction> transactions)
+    public String getMerkleRoot(@NotNull List<Transaction> transactions)
     {
         List<String> hashedTransactions = new ArrayList<String>();
-        hashedTransactions = hashedTransactions(transactions);
+
+        List<Transaction> transactionsToHash = new ArrayList<>(transactions);
+
         int maxSize = (int)Math.ceil(Math.log(transactions.size())/Math.log(2));
+
         for(int i=transactions.size()-1; i<Math.pow(2,maxSize); i++)
         {
-            hashedTransactions.add(hashedTransactions.get(hashedTransactions.size()-1));
+            transactionsToHash.add(transactions.get(transactions.size()-1));
         }
 
+        hashedTransactions = hashedTransactions(transactionsToHash);
         List<String> listOfHashedNodes = new ArrayList<>();
 
         while(hashedTransactions.size()!=1)
