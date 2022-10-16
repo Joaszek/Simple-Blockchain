@@ -1,13 +1,12 @@
 package blockchain;
 
-import com.google.common.hash.Hashing;
-import hashing.HashStrings;
 import logger.Logger;
 import hashing.Hash;
 import users.User;
 import users.UserManager;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -20,9 +19,11 @@ public class BlockManager {
         System.out.println("Block ID: " + block.getBlockUUID());
         System.out.println("Status: ");
         System.out.println("Timestamp: " + block.getBlockHeader().getTimeStamp());
-        System.out.println("Difficulty: " + block.getBlockHeader().getDifficultyTarget());
-        System.out.println("Size: ");
-        System.out.println("Time used to mine: ");
+        System.out.println("Difficulty: " + BlockHeader.getDifficultyTarget());
+        System.out.println("Time used to mine: " + block.getTimeUsedToMine()+" milliseconds");
+        System.out.println("Hash: " + block.getHash());
+        System.out.println("Block UUID: " + block.getBlockUUID());
+        System.out.println("Nonce: " + block.getBlockHeader().getNonce());
         System.out.println("Transactions: ");
         printTransactions(block);
     }
@@ -44,7 +45,7 @@ public class BlockManager {
 
             receiver=getAndCheckIfUserExists(users,"Receiver");
 
-            transactionValue=checkIfOperationIsPossible(sender);
+            transactionValue=checkIfOperationIsPossible(users,sender);
 
             transactionName=getTransactionName();
 
@@ -118,10 +119,19 @@ public class BlockManager {
 
 
     //check if balance of the sender is enough to run the transaction
-    private static BigDecimal checkIfOperationIsPossible(String sender) {
+    private static BigDecimal checkIfOperationIsPossible(List<User> users,String sender) {
 
         Scanner scanner = new Scanner(System.in);
         BigDecimal transactionValue = new BigDecimal(0);
+        BigDecimal stateOfTheWallet = new BigDecimal(0);
+
+        for(User user : users)
+        {
+            if(user.getName().equals(sender))
+            {
+                stateOfTheWallet=user.getWallet().getBalance();
+            }
+        }
 
         System.out.println("Enter Transaction Value: ");
         try {
@@ -131,11 +141,21 @@ public class BlockManager {
             Logger.printError(e,BlockManager.class);
         }
         //if transactionValue is negative or equal 0
-        while(transactionValue.compareTo(BigDecimal.valueOf(0))<=0)
+        while(transactionValue.compareTo(BigDecimal.valueOf(0))<=0|| transactionValue.compareTo(stateOfTheWallet) > 0)
         {
-            System.out.println("Transaction value should be greater than 0");
-            System.out.println("Enter transactionValue: ");
-            transactionValue=scanner.nextBigDecimal();
+            if(transactionValue.compareTo(BigDecimal.valueOf(0))<=0)
+            {
+                System.out.println("Transaction value should be greater than 0");
+                System.out.println("Enter transaction Value: ");
+                transactionValue=scanner.nextBigDecimal();
+            }
+            if(transactionValue.compareTo(stateOfTheWallet)>0)
+            {
+                System.out.println("Sender doesn't have that much money");
+                System.out.println("Enter transaction Value: ");
+                transactionValue=scanner.nextBigDecimal();
+            }
+
         }
         return transactionValue;
     }
@@ -206,7 +226,7 @@ public class BlockManager {
     //create and set hash of the block
     public static void signBlockWithHash(Block block, String previousHash)
     {
-        int difficultyTarget = block.getBlockHeader().getDifficultyTarget();
+        int difficultyTarget =BlockHeader.getDifficultyTarget();
         int nonce = block.getBlockHeader().getNonce();
         String merkleRoot = block.getBlockHeader().getMerkleRoot();
         StringBuilder timeStamp = block.getBlockHeader().getTimeStamp();
@@ -231,5 +251,10 @@ public class BlockManager {
             throw new RuntimeException("Unsupported value for difficulty target: ");
         }
         BlockHeader.setDifficultyTarget(difficultyTarget);
+    }
+    public static void setBlockHeaderTimeStamp(Block block)
+    {
+        StringBuilder timeStamp= new StringBuilder(String.valueOf(LocalDateTime.now()));
+        block.getBlockHeader().setTimeStamp(timeStamp);
     }
 }

@@ -19,7 +19,7 @@ public class WriteFromFile {
 
         User tempUser;
         JSONParser jsonParser = new JSONParser();
-        try (FileReader reader = new FileReader("C:\\Users\\jszewior\\Downloads\\Simple Blockchain\\src\\main\\java\\JSON\\writeFromFile.json")) {
+        try (FileReader reader = new FileReader("C:\\Users\\jszewior\\Downloads\\Simple Blockchain\\src\\main\\java\\JSON\\users.json")) {
             Object object = jsonParser.parse(reader);
             JSONArray jsonArray = (JSONArray) object;
             System.out.println(jsonArray);

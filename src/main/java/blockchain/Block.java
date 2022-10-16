@@ -11,7 +11,17 @@ public class Block {
     private List<Transaction> transactions = new LinkedList<>();
     private final LocalDateTime timeOfBlockCreation = LocalDateTime.now();
     private BlockHeader blockHeader;
-    private static int blockchainVersion=0;
+    private static final int blockchainVersion=0;
+
+    public long getTimeUsedToMine() {
+        return timeUsedToMine;
+    }
+
+    public void setTimeUsedToMine(long timeUsedToMine) {
+        this.timeUsedToMine = timeUsedToMine;
+    }
+
+    private long timeUsedToMine;
 
     public UUID getBlockUUID() {
         return blockID;
@@ -44,9 +54,6 @@ public class Block {
         this.transactions = transactions;
     }
 
-    public LocalDateTime getTimeOfBlockCreation() {
-        return timeOfBlockCreation;
-    }
     public BlockHeader getBlockHeader() {
         return blockHeader;
     }
@@ -55,9 +62,6 @@ public class Block {
         this.blockHeader = blockHeader;
     }
 
-    public static int getBlockchainVersion() {
-        return blockchainVersion;
-    }
     public String getHash() {
         return hash;
     }

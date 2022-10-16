@@ -33,4 +33,12 @@ public class Transaction {
         this.dateTime= LocalDateTime.now();
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "transactionName='" + transactionName + '\'' +
+                ", transactionValue=" + transactionValue +
+                ", dateTime=" + dateTime +
+                '}';
+    }
 }

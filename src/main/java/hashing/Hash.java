@@ -1,6 +1,7 @@
 package hashing;
 
 import blockchain.Block;
+import blockchain.BlockHeader;
 import blockchain.Transaction;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,9 +37,18 @@ public class Hash {
 
         List<Transaction> transactionsToHash = new ArrayList<>(transactions);
 
-        int maxSize = (int)Math.ceil(Math.log(transactions.size())/Math.log(2));
+        int maxSize;
+        if(transactions.size()==1)
+        {
+            maxSize=1;
+        }
+        else
+        {
+            maxSize = (int)Math.ceil(transactions.size()/Math.log(2));
+        }
 
-        for(int i=transactions.size()-1; i<Math.pow(2,maxSize); i++)
+
+        for(int i=transactions.size(); i<Math.pow(2,maxSize); i++)
         {
             transactionsToHash.add(transactions.get(transactions.size()-1));
         }
@@ -67,21 +77,25 @@ public class Hash {
         String subStringOfPreviousHash= previousHash.substring(0, difficultyTarget);
         String subStringOfCurrentHash=createBlockHash(nonce,previousHash,merkleRoot, timeStamp).substring(0,difficultyTarget);
         String finalHash=null;
+        long startOfTheMining=System.currentTimeMillis();
         while(!subStringOfCurrentHash.equals(subStringOfPreviousHash))
         {
             finalHash = createBlockHash(nonce,previousHash,merkleRoot, timeStamp);
             subStringOfCurrentHash= finalHash.substring(0,difficultyTarget);
             nonce++;
         }
+        long timeUsedToMine=System.currentTimeMillis()-startOfTheMining;
+        block.setTimeUsedToMine(timeUsedToMine);
         block.getBlockHeader().setNonce(nonce);
+        block.getBlockHeader().setPreviousHash(previousHash);
         return finalHash;
     }
     private static String createBlockHash(int nonce, String previousHash,
                                   String merkleRoot, StringBuilder timeStamp)
     {
-        return HashStrings.hash(String.valueOf(nonce)
+        return HashStrings.hash(nonce
                 +previousHash
                 +timeStamp
-                +merkleRoot);
+                +merkleRoot+ BlockHeader.getDifficultyTarget()+BlockHeader.getVersion());
     }
 }

@@ -12,6 +12,7 @@ import users.User;
 import users.UserManager;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -33,11 +34,11 @@ public class MenuExecute implements MenuOperations
         System.out.println("Menu:");
         System.out.println("1. Add transactions to block");
         System.out.println("2. Show block by hash: ");
-        System.out.println("3. Show block by index: ");
+        System.out.println("3. Show block by UUID: ");
         System.out.println("4. Create user");
         System.out.println("5. Show user by name");
         System.out.println("6. Show last block");
-        System.out.println("7. Send users to UsersDoc.json");
+        System.out.println("7. Send users to users.json");
         System.out.println("8. Write from file");
         System.out.println("9. Quit");
         System.out.println("Choice: ");
@@ -58,8 +59,9 @@ public class MenuExecute implements MenuOperations
         Hash hash = new Hash();
         Block lastBlock =blockchain.get(blockchain.size()-1);
 
-        BlockManager.addTransactionToBlock(users,block);
-        block.getBlockHeader().setMerkleRoot(hash.getMerkleRoot(block.getTransactions()));
+        BlockManager.addTransactionToBlock(users,block);//works
+        block.getBlockHeader().setMerkleRoot(hash.getMerkleRoot(block.getTransactions()));//works
+        BlockManager.setBlockHeaderTimeStamp(block);
         BlockManager.signBlockWithHash(block, lastBlock.getHash());
         blockchain.add(block);
         System.out.println("Block was successfully added to blockchain.");
@@ -112,7 +114,7 @@ public class MenuExecute implements MenuOperations
         {
             if(user.getName().equals(name))
             {
-                //System.out.println(user);
+                System.out.println(user);
             }
         }
     }
@@ -123,22 +125,31 @@ public class MenuExecute implements MenuOperations
     }
 
     @Override
-    public void writeDataToFile(List<User> users) {
+    public void writeUsersToFile(List<User> users) {
+        WriteToFile writeToFile = new WriteToFile();
         try {
-            WriteToFile.writeToFile((LinkedList<User>) users);
-        } catch (IOException e) {
-            Logger.printError(e,BlockManager.class);
+            writeToFile.writeUsersToFile(users);
+        } catch (IOException | URISyntaxException e) {
+            //Logger.printError(e,BlockManager.class);
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void getDataFromFile(List<User> users) {
-        WriteFromFile.writeFromFile((LinkedList<User>) users);
+    public void writeBlockchainToFile(List<Block> blockchain) {
+       WriteToFile writeToFile = new WriteToFile();
+        try{
+            writeToFile.writeBlockchainToFile(blockchain);
+        }catch (IOException e)
+        {
+            Logger.printError(e, BlockManager.class);
+        }
     }
 
     @Override
-    public void endOperations(boolean loop) {
-        loop =false;
+    public void endOperations() {
+        System.out.println("You chose to finish.");
+        System.exit(0);
     }
 
     @Override
