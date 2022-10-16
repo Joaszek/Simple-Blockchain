@@ -40,7 +40,8 @@ public class MenuExecute implements MenuOperations
         System.out.println("6. Show last block");
         System.out.println("7. Send users to users.json");
         System.out.println("8. Write from file");
-        System.out.println("9. Quit");
+        System.out.println("9. Get users from file");
+        System.out.println("10. Quit");
         System.out.println("Choice: ");
         option = scanner.next();
         while(!isValid) {
@@ -144,6 +145,12 @@ public class MenuExecute implements MenuOperations
         {
             Logger.printError(e, BlockManager.class);
         }
+    }
+
+    @Override
+    public void readUsersJSON(List<User> users) {
+        WriteFromFile writeFromFile = new WriteFromFile();
+        writeFromFile.writeFromFile(users);
     }
 
     @Override

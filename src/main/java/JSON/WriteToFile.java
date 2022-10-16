@@ -21,10 +21,12 @@ public class WriteToFile {
 
     public void writeUsersToFile(@NotNull List<User> users) throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writerWithDefaultPrettyPrinter();
         objectMapper.writeValue(new File("src/main/resources/users.json"),users);
     }
     public void writeBlockchainToFile(List<Block> blockchain) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writerWithDefaultPrettyPrinter();
         objectMapper.writeValue(new File("src/main/resources/blockchain.json"),blockchain);
     }
 

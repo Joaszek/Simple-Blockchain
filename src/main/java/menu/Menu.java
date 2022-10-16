@@ -2,6 +2,7 @@ package menu;
 
 import blockchain.*;
 
+import logger.Logger;
 import users.User;
 
 import java.util.ArrayList;
@@ -37,10 +38,11 @@ public class Menu {
                 case 6 -> menuOperations.showLastBlock(lastBlock);
                 case 7 -> menuOperations.writeUsersToFile(users);
                 case 8 -> menuOperations.writeBlockchainToFile(blockchain);
-                case 9 -> menuOperations.endOperations();
+                case 9 -> menuOperations.readUsersJSON(users);
+                case 10 -> menuOperations.endOperations();
 
                 default -> {
-                    //Logger.printUnsupportedOption(Menu.class,);
+                    //Logger.printUnsupportedOption(Menu.class);
                 }
               }
         }

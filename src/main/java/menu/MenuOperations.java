@@ -16,6 +16,7 @@ public interface MenuOperations {
     void showLastBlock(Block lastBlock);
     void writeUsersToFile(List<User> users);
     void writeBlockchainToFile(List<Block> blockchain);
+    void readUsersJSON(List<User> users);
     void endOperations();
     Block setLastBlock(List<Block> blockchain);
     void createFirstUser(List<User> users);

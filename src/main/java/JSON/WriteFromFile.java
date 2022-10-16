@@ -1,49 +1,39 @@
 package JSON;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import logger.Logger;
 import users.User;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedList;
+import java.util.List;
 
 public class WriteFromFile {
-    @SuppressWarnings("unchecked")
-    public static void writeFromFile(LinkedList<User> users) {
-        //InputStream is =  WriteFromFile.class.getClassLoader().getResourceAsStream("/resource/test.txt");
 
-        User tempUser;
-        JSONParser jsonParser = new JSONParser();
-        try (FileReader reader = new FileReader("C:\\Users\\jszewior\\Downloads\\Simple Blockchain\\src\\main\\java\\JSON\\users.json")) {
-            Object object = jsonParser.parse(reader);
-            JSONArray jsonArray = (JSONArray) object;
-            System.out.println(jsonArray);
-            jsonArray.forEach(user->parseUsersObjects( (JSONObject) user));
-        } catch (FileNotFoundException e)
+    public void writeFromFile(List<User> users) {
+        //InputStream is =  WriteFromFile.class.getClassLoader().getResourceAsStream("C:\\Users\\Joachim\\Backend\\Simple-Blockchain\\src\\main\\resources\\users.json");
+        InputStream inputStream=null;
+        byte[] array = new byte[1000];
+
+        try
         {
-            //e.printStackTrace(); zamien na loggera
-        }  catch (ParseException e)
+            inputStream=new FileInputStream("C:\\Users\\Joachim\\Backend\\Simple-Blockchain\\src\\main\\resources\\users.json");
+        }catch (IOException e)
         {
-            e.printStackTrace();
-        }catch (IOException e ) {
-//e.printStackTrace(); zamien na loggera        }
+            Logger.printError(e,WriteFromFile.class);
         }
-
-    }
-    private static void parseUsersObjects(JSONObject user)
-    {
-        JSONObject userObject = (JSONObject) user.get("User: ");
-        System.out.println("User:");
-        String name = (String) userObject.get("Name:");
-        System.out.println("Name: "+name);
-        String IdNumber = String.valueOf(userObject.get("User ID:"));
-        System.out.println("ID:"+IdNumber);
-        Double wallet = (Double) userObject.get("Wallet:");
-        System.out.println("Wallet:"+wallet);
+        try {
+            assert inputStream != null;
+            System.out.println("Bytes: "+inputStream.available());
+            inputStream.read(array);
+            String data = new String(array);
+            System.out.println(data);
+            inputStream.close();
+            //https://www.javatpoint.com/iterate-json-array-java
+        }catch (IOException e)
+        {
+            Logger.printError(e,WriteFromFile.class);
+        }
     }
 }
