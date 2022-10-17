@@ -39,7 +39,7 @@ public class MenuExecute implements MenuOperations
         System.out.println("5. Show user by name");
         System.out.println("6. Show last block");
         System.out.println("7. Send users to users.json");
-        System.out.println("8. Write from file");
+        System.out.println("8. Send blockchain to file");
         System.out.println("9. Get users from file");
         System.out.println("10. Quit");
         System.out.println("Choice: ");
@@ -179,10 +179,10 @@ public class MenuExecute implements MenuOperations
 
     @Override
     public int userChoseWrongOption() {
-        int option=10;
+        int option=11;
         Scanner scanner = new Scanner(System.in);
 
-        while(option<0||option>9)
+        while(option<0||option>10)
         {
             System.out.println("You chose wrong option");
             System.out.println("Enter correct option");
@@ -194,17 +194,13 @@ public class MenuExecute implements MenuOperations
             }
         }
         return option;
-
-
-
-
     }
     public boolean checkInput(String input)
     {
         int cos;
         try {
             cos=Integer.parseInt(input);
-            if(cos>=0&&cos<=9)
+            if(cos>=0&&cos<=10)
             {
                 return true;
             }

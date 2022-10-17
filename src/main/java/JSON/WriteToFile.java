@@ -2,6 +2,7 @@ package JSON;
 
 
 import blockchain.Block;
+import com.fasterxml.jackson.core.PrettyPrinter;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import users.User;
@@ -21,8 +22,9 @@ public class WriteToFile {
 
     public void writeUsersToFile(@NotNull List<User> users) throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writerWithDefaultPrettyPrinter();
-        objectMapper.writeValue(new File("src/main/resources/users.json"),users);
+        String usersAsString  = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(users);
+        objectMapper.writeValue(new File("src/main/resources/users.json"),usersAsString);
+        System.out.println(usersAsString);
     }
     public void writeBlockchainToFile(List<Block> blockchain) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
