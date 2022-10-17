@@ -14,9 +14,10 @@ public interface MenuOperations {
     void addNewUser(List<User> users);
     void printUserInformation(List<User> users);
     void showLastBlock(Block lastBlock);
-    void writeDataToFile(List<User> users);
-    void getDataFromFile(List<User> users);
-    void endOperations(boolean loop);
+    void writeUsersToFile(List<User> users);
+    void writeBlockchainToFile(List<Block> blockchain);
+    void readUsersJSON(List<User> users);
+    void endOperations();
     Block setLastBlock(List<Block> blockchain);
     void createFirstUser(List<User> users);
     void createFirstBlock(List<Block> blockchain);

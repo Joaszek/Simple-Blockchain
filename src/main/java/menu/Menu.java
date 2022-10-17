@@ -4,7 +4,6 @@ import blockchain.*;
 
 import logger.Logger;
 import users.User;
-import wallet.Wallet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,12 +36,13 @@ public class Menu {
                 case 4 -> menuOperations.addNewUser(users);
                 case 5 -> menuOperations.printUserInformation(users);
                 case 6 -> menuOperations.showLastBlock(lastBlock);
-                case 7 -> menuOperations.writeDataToFile(users);
-                case 8 -> menuOperations.getDataFromFile(users);
-                case 9 -> menuOperations.endOperations(loop);
+                case 7 -> menuOperations.writeUsersToFile(users);
+                case 8 -> menuOperations.writeBlockchainToFile(blockchain);
+                case 9 -> menuOperations.readUsersJSON(users);
+                case 10 -> menuOperations.endOperations();
 
                 default -> {
-                    //Logger.printUnsupportedOption(Menu.class,);
+                    //Logger.printUnsupportedOption(Menu.class);
                 }
               }
         }

@@ -39,7 +39,7 @@ public class Wallet {
     @Override
     public String toString() {
         return "Wallet{" +
-                "transactions=" + transactions +
+                "transactions=" + transactions.toString() +
                 ", balance=" + balance +
                 '}';
     }

@@ -8,7 +8,7 @@ public class BlockHeader {
     }
 
     private StringBuilder timeStamp;
-    private final int version=0;
+    private static final int version=0;
     private String merkleRoot;
     private static int difficultyTarget;
     private int nonce;
@@ -17,20 +17,16 @@ public class BlockHeader {
     public StringBuilder getTimeStamp() {
         return this.timeStamp;
     }
-    public int getDifficultyTarget()
+    public static int getDifficultyTarget()
     {
         return difficultyTarget;
-    }
-    public String getPreviousHash()
-    {
-        return this.previousHash;
     }
     public int getNonce()
     {
         return this.nonce;
     }
     public static void setDifficultyTarget(int difficultyTarget) {
-        difficultyTarget = difficultyTarget;
+        BlockHeader.difficultyTarget = difficultyTarget;
     }
     public void setNonce(int nonce)
     {
@@ -43,5 +39,12 @@ public class BlockHeader {
     public String getMerkleRoot()
     {
         return this.merkleRoot;
+    }
+    public static int getVersion()
+    {
+        return BlockHeader.version;
+    }
+    public void setPreviousHash(String previousHash) {
+        this.previousHash=previousHash;
     }
 }

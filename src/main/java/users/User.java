@@ -49,10 +49,12 @@ public class User {
         this.setUuid(UUID.randomUUID());
         this.setName("Satoshi Nakamoto");
     }
+
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "uuid=" + uuid +
+                ", name='" + name + '\'' +
                 ", wallet=" + wallet +
                 '}';
     }

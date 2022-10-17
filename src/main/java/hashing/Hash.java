@@ -1,7 +1,11 @@
 package hashing;
 
 import blockchain.Block;
+import blockchain.BlockHeader;
 import blockchain.Transaction;
+import org.jetbrains.annotations.NotNull;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,28 +15,45 @@ public class Hash {
     private List<String> hashedTransactions(List<Transaction> transactions)
     {
         List<String> transactionsList = new LinkedList<String>();
+        StringBuilder hashedTransaction;
         for(Transaction transaction : transactions)
         {
-            transactionsList.add(HashStrings.hash(transaction.getTransactionName()));
-            transactionsList.add(HashStrings.hash(String.valueOf(transaction.getTransactionValue())));
-            transactionsList.add(HashStrings.hash(String.valueOf(transaction.getDateTime())));
+            hashedTransaction = new StringBuilder();
+            hashedTransaction.append(HashStrings.hash(transaction.getTransactionName()));
+            hashedTransaction.append(HashStrings.hash(String.valueOf(transaction.getTransactionValue())));
+            hashedTransaction.append(HashStrings.hash(String.valueOf(transaction.getDateTime())));
+            transactionsList.add(hashedTransaction.toString());
         }
+
         return transactionsList;
     }
     private String hashTwoNodesIntoOne(String hashedTransactions)
     {
         return HashStrings.hash(hashedTransactions);
     }
-    public String getMerkleRoot(List<Transaction> transactions)
+    public String getMerkleRoot(@NotNull List<Transaction> transactions)
     {
         List<String> hashedTransactions = new ArrayList<String>();
-        hashedTransactions = hashedTransactions(transactions);
-        int maxSize = (int)Math.ceil(Math.log(transactions.size())/Math.log(2));
-        for(int i=transactions.size()-1; i<Math.pow(2,maxSize); i++)
+
+        List<Transaction> transactionsToHash = new ArrayList<>(transactions);
+
+        int maxSize;
+        if(transactions.size()==1)
         {
-            hashedTransactions.add(hashedTransactions.get(hashedTransactions.size()-1));
+            maxSize=1;
+        }
+        else
+        {
+            maxSize = (int)Math.ceil(transactions.size()/Math.log(2));
         }
 
+
+        for(int i=transactions.size(); i<Math.pow(2,maxSize); i++)
+        {
+            transactionsToHash.add(transactions.get(transactions.size()-1));
+        }
+
+        hashedTransactions = hashedTransactions(transactionsToHash);
         List<String> listOfHashedNodes = new ArrayList<>();
 
         while(hashedTransactions.size()!=1)
@@ -56,21 +77,25 @@ public class Hash {
         String subStringOfPreviousHash= previousHash.substring(0, difficultyTarget);
         String subStringOfCurrentHash=createBlockHash(nonce,previousHash,merkleRoot, timeStamp).substring(0,difficultyTarget);
         String finalHash=null;
+        long startOfTheMining=System.currentTimeMillis();
         while(!subStringOfCurrentHash.equals(subStringOfPreviousHash))
         {
             finalHash = createBlockHash(nonce,previousHash,merkleRoot, timeStamp);
             subStringOfCurrentHash= finalHash.substring(0,difficultyTarget);
             nonce++;
         }
+        long timeUsedToMine=System.currentTimeMillis()-startOfTheMining;
+        block.setTimeUsedToMine(timeUsedToMine);
         block.getBlockHeader().setNonce(nonce);
+        block.getBlockHeader().setPreviousHash(previousHash);
         return finalHash;
     }
     private static String createBlockHash(int nonce, String previousHash,
                                   String merkleRoot, StringBuilder timeStamp)
     {
-        return HashStrings.hash(String.valueOf(nonce)
+        return HashStrings.hash(nonce
                 +previousHash
                 +timeStamp
-                +merkleRoot);
+                +merkleRoot+ BlockHeader.getDifficultyTarget()+BlockHeader.getVersion());
     }
 }
