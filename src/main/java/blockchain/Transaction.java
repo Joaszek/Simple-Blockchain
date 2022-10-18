@@ -29,8 +29,12 @@ public class Transaction {
         return dateTime;
     }
 
-    public void setTimestamp() {
+    public void setLocalDateTime() {
         this.dateTime= LocalDateTime.now();
+    }
+
+    public void setLocalDateTimeFromJSON(LocalDateTime localDateTime) {
+        this.dateTime= localDateTime;
     }
 
     @Override

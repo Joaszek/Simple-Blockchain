@@ -1,77 +1,85 @@
 package JSON;
 
+import blockchain.Transaction;
+import com.google.common.io.Files;
 import logger.Logger;
 //import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import users.User;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import wallet.Wallet;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class WriteFromFile {
 
     //check if file exists
     public void writeFromFile(List<User> users) {
         //InputStream is =  WriteFromFile.class.getClassLoader().getResourceAsStream("C:\\Users\\Joachim\\Backend\\Simple-Blockchain\\src\\main\\resources\\users.json");
-        InputStream inputStream=null;
-        byte[] array = new byte[10000];
 
-        try
-        {
-            inputStream=new FileInputStream("src/main/resources/usersToRead.json");
-        }catch (IOException e)
-        {
-            Logger.printError(e,WriteFromFile.class);
-        }
         try {
-            assert inputStream != null;
-            System.out.println("Bytes: "+inputStream.available());
-            inputStream.read(array);
-            String data = new String(array);
-            System.out.println(data);
-//            JSONObject json = new JSONObject(data);
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(new FileReader("src/main/resources/usersToRead.json"));
+            JSONObject objJsonObject = new JSONObject(obj.toString());
+            JSONArray jsonArray = objJsonObject.getJSONArray("users");
 
-  //          JSONArray usersArray = json.getJSONArray("id");
+            for (int i = 0; i < jsonArray.length(); i++) {
 
-    //        System.out.println(usersArray);
-    //        JSONArray jsonArray = new JSONArray(.getEntity(String.class));
-    //        for(int i =0; i< jsonArray.length(); i++){
-    //            if(jsonArray.get(i) instanceof JSONObject){
-            // JSONObject jsnObj = (JSONObject)jsonArray.get(i);
-    //                String finalValue = (String)jsnObj.get("id");
-    //            }
-    //        }
+                User user = new User();
+                String uuid = jsonArray.getJSONObject(i).getString("uuid");
+                user.setUuid(UUID.fromString(uuid));
+                String name = jsonArray.getJSONObject(i).getString("name");
+                user.setName(name);
+                JSONObject walletJSON = jsonArray.getJSONObject(i).getJSONObject("wallet");
+
+                Wallet wallet = new Wallet();
 
 
+                JSONArray transactions = walletJSON.getJSONArray("transactions");
+                for (int j = 0; j < transactions.length(); j++)
+                {
+                    Transaction transaction = new Transaction();
 
 
-            inputStream.close();
-            //https://www.javatpoint.com/iterate-json-array-java
-        }catch (IOException e)
-        {
-            Logger.printError(e,WriteFromFile.class);
-        }
-        String data = "{\"data\":[{\"username\":\"ramu\",\"email\":\"ramu@sneppets.com\",\"is_enabled\":true,\"_id\":\"123597\"},{\"username\":\"raju\",\"email\":\"raju@sneppets.com\",\"is_enabled\":true,\"_id\":\"123598\"}],\"meta\":{\"total\":2,\"references\":{}}}";
-        JSONObject jsonObj = new JSONObject(data);
-        System.out.println(data);
-        List<String> idList = getIdList(jsonObj);
-        System.out.println("List of user id's : " + idList);
-    }
+                    String transactionName = transactions.getJSONObject(0).get("transactionName").toString();
+                    transaction.setTransactionName(transactionName);
 
-    private static List<String> getIdList(JSONObject jsonObj) {
-        List<String> idList = new ArrayList<>();
-        JSONArray jsonArr = new JSONArray(jsonObj.get("data").toString());
-        if (jsonArr.length() > 0) {
-            for (int i=0; i<jsonArr.length(); i++) {
-                JSONObject obj = jsonArr.getJSONObject(i);
-                idList.add((obj.get("_id").toString()));
+                    String transactionValue = transactions.getJSONObject(0).get("transactionValue").toString();
+                    transaction.setTransactionValue(BigDecimal.valueOf(Double.parseDouble(transactionValue)));
+
+
+                    JSONObject dateTime = transactions.getJSONObject(0).getJSONObject("dateTime");
+
+                    String year = dateTime.get("year").toString();
+                    int intYear = Integer.parseInt(year);
+
+                    String month = dateTime.get("monthValue").toString();
+                    int intMonth = Integer.parseInt(month);
+
+                    String dayOfMonth = dateTime.get("dayOfMonth").toString();
+                    int intDayOfMonth = Integer.parseInt(dayOfMonth);
+
+                    String hour = dateTime.get("hour").toString();
+                    String minute = dateTime.get("minute").toString();
+                    String second = dateTime.get("second").toString();
+                    String nano = dateTime.get("nano").toString();
+                    LocalDateTime localDate = new LocalDateTime(LocalDateTime.of());
+                }
+
+                String balance = walletJSON.get("balance").toString();
             }
+//
+        } catch (IOException | ParseException e) {
+            throw new RuntimeException(e);
         }
-        return idList;
     }
 }

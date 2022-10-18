@@ -196,7 +196,7 @@ public class BlockManager {
         Transaction transaction = new Transaction();
         transaction.setTransactionValue(transactionValue);
         transaction.setTransactionName(transactionName);
-        transaction.setTimestamp();
+        transaction.setLocalDateTime();
         return transaction;
     }
 

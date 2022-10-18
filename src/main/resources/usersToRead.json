@@ -1,1 +1,61 @@
-{[{\"uuid\":\"1e51402a-54d1-4598-b21c-80664babf185\",\"name\":\"Anton\",\"wallet\":{\"transactions\":[{\"transactionName\":\"1\",\"transactionValue\":400,\"dateTime\":{\"nano\":292241400,\"year\":2022,\"monthValue\":10,\"dayOfMonth\":17,\"hour\":8,\"minute\":3,\"second\":15,\"month\":\"OCTOBER\",\"dayOfWeek\":\"MONDAY\",\"dayOfYear\":290,\"chronology\":{\"id\":\"ISO\",\"calendarType\":\"iso8601\",\"isoBased\":true}}}],\"balance\":400}},{\"uuid\":\"e8cf27db-cf2d-42ca-9f81-ed4df818418f\",\"name\":\"Tom\",\"wallet\":{\"transactions\":[{\"transactionName\":\"2\",\"transactionValue\":400,\"dateTime\":{\"nano\":940258300,\"year\":2022,\"monthValue\":10,\"dayOfMonth\":17,\"hour\":8,\"minute\":3,\"second\":31,\"month\":\"OCTOBER\",\"dayOfWeek\":\"MONDAY\",\"dayOfYear\":290,\"chronology\":{\"id\":\"ISO\",\"calendarType\":\"iso8601\",\"isoBased\":true}}}],\"balance\":400}}]}
+{
+	"users": [
+		{
+			"uuid" : "94235c98-6d41-46d7-bc1c-37646b2001a6",
+			"name" : "a",
+			"wallet" : {
+				"transactions" : [
+					{
+						"transactionName" : "1",
+						"transactionValue" : 500,
+						"dateTime" : {
+							"year" : 2022,
+							"monthValue" : 10,
+							"dayOfMonth" : 18,
+							"hour" : 10,
+							"minute" : 28,
+							"second" : 46,
+							"nano" : 790266200,
+							"dayOfWeek" : "TUESDAY",
+							"dayOfYear" : 291,
+							"month" : "OCTOBER",
+							"chronology" : [{
+								"id" : "ISO",
+								"calendarType" : "iso8601"
+							}]
+						}
+					}],
+				"balance" : 500
+			}
+		},
+		{
+			"uuid" : "40d114ea-bbe5-46cf-bb7a-95fc804b22bf",
+			"name" : "b",
+			"wallet" :
+			{
+				"transactions" : [
+					{
+						"transactionName" : "2",
+						"transactionValue" : 400,
+						"dateTime" : {
+							"year" : 2022,
+							"monthValue" : 10,
+							"dayOfMonth" : 18,
+							"hour" : 10,
+							"minute" : 29,
+							"second" : 0,
+							"nano" : 24187100,
+							"dayOfWeek" : "TUESDAY",
+							"dayOfYear" : 291,
+							"month" : "OCTOBER",
+							"chronology" : {
+								"id" : "ISO",
+								"calendarType" : "iso8601"
+							}
+						}
+					}],
+				"balance" : 400
+			}
+		}
+	]
+}
