@@ -22,9 +22,8 @@ import java.util.stream.Collectors;
 
 public class WriteFromFile {
 
-    //check if file exists
+
     public void writeFromFile(List<User> users) {
-        //InputStream is =  WriteFromFile.class.getClassLoader().getResourceAsStream("C:\\Users\\Joachim\\Backend\\Simple-Blockchain\\src\\main\\resources\\users.json");
 
         try {
             JSONParser parser = new JSONParser();
@@ -69,14 +68,29 @@ public class WriteFromFile {
                     int intDayOfMonth = Integer.parseInt(dayOfMonth);
 
                     String hour = dateTime.get("hour").toString();
+                    int intHour = Integer.parseInt(hour);
+
                     String minute = dateTime.get("minute").toString();
+                    int intMinute = Integer.parseInt(minute);
+
                     String second = dateTime.get("second").toString();
+                    int intSecond = Integer.parseInt(second);
+
                     String nano = dateTime.get("nano").toString();
-                    LocalDateTime localDate = new LocalDateTime(LocalDateTime.of());
+                    int intNano = Integer.parseInt(nano);
+
+                    LocalDateTime localDate = LocalDateTime.of(intYear,intMonth,intDayOfMonth,intHour,intMinute,intSecond,intNano);
+                    transaction.setLocalDateTimeFromJSON(localDate);
+                    wallet.addTransactions(transaction);
                 }
 
-                String balance = walletJSON.get("balance").toString();
+                String balanceJSON = walletJSON.get("balance").toString();
+                BigDecimal balance = BigDecimal.valueOf(Double.parseDouble(balanceJSON));
+                wallet.addBalance(balance);
+                user.setWallet(wallet);
+                users.add(user);
             }
+
 //
         } catch (IOException | ParseException e) {
             throw new RuntimeException(e);

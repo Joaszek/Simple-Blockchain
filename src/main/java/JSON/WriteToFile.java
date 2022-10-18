@@ -24,7 +24,6 @@ public class WriteToFile {
         ObjectMapper objectMapper = new ObjectMapper();
         String usersAsString  = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(users);
         objectMapper.writeValue(new File("src/main/resources/users.json"),usersAsString);
-        System.out.println(usersAsString);
     }
     public void writeBlockchainToFile(List<Block> blockchain) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
