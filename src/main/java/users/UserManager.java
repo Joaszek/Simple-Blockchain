@@ -5,7 +5,6 @@ import wallet.Wallet;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Scanner;
 
 public class UserManager {

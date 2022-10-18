@@ -21,5 +21,4 @@ public interface MenuOperations {
     Block setLastBlock(List<Block> blockchain);
     void createFirstUser(List<User> users);
     void createFirstBlock(List<Block> blockchain);
-    int userChoseWrongOption();
 }

@@ -2,20 +2,14 @@ package JSON;
 
 
 import blockchain.Block;
-import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
 import users.User;
 
-
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class WriteToFile {
 

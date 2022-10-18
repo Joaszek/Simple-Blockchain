@@ -1,5 +1,6 @@
 package blockchain;
 
+import checkInputs.CheckInputs;
 import logger.Logger;
 import hashing.Hash;
 import users.User;
@@ -243,9 +244,9 @@ public class BlockManager {
     {
         int difficultyTarget;
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter difficulty target: ");
+        System.out.println("Enter difficulty target in range 1-10: ");
         try{
-            difficultyTarget = scanner.nextInt();
+            difficultyTarget = CheckInputs.getCorrectInput(1,10);
         }catch (Exception e)
         {
             throw new RuntimeException("Unsupported value for difficulty target: ");

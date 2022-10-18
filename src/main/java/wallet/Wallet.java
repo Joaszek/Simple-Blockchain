@@ -3,7 +3,6 @@ package wallet;
 import blockchain.Transaction;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.LinkedList;
 
 

@@ -4,8 +4,6 @@ package blockchain;
 import menu.Menu;
 import menu.MenuExecute;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class Main {

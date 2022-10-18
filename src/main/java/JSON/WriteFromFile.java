@@ -1,24 +1,19 @@
 package JSON;
 
 import blockchain.Transaction;
-import com.google.common.io.Files;
-import logger.Logger;
-//import org.json.simple.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import users.User;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import wallet.Wallet;
 
-import java.io.*;
+import java.io.FileReader;
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class WriteFromFile {
 

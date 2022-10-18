@@ -2,7 +2,6 @@ package menu;
 
 import blockchain.*;
 
-import logger.Logger;
 import users.User;
 
 import java.util.ArrayList;
