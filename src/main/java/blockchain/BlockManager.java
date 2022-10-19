@@ -113,7 +113,8 @@ public class BlockManager {
 
             final String newUserNameFinal = userName;
 
-            nameDoesntExist = users.stream().noneMatch(user -> user.getName().equals(newUserNameFinal));
+            nameDoesntExist = users.stream()
+                    .noneMatch(user -> user.getName().equals(newUserNameFinal));
 
         }
         return userName;
@@ -198,8 +199,8 @@ public class BlockManager {
 
         block.getTransactions()
                 .forEach(transaction -> System.out.println(
-                        "Name: "+transaction.getTransactionName()+
-                        "Value: " + transaction.getTransactionValue()+
+                        "Name: "+transaction.getTransactionName()+" "+
+                        "Value: " + transaction.getTransactionValue()+" "+
                         "Time: " + transaction.getDateTime()
         ));
     }
@@ -233,7 +234,8 @@ public class BlockManager {
     public static void setDifficultyTarget()
     {
         int difficultyTarget;
-        System.out.println("Enter difficulty target in range 1-10: ");
+        System.out.println("Enter difficulty target in range 1-10");
+        System.out.println("The bigger the difficulty, the more it takes to mine: ");
         try{
             difficultyTarget = CheckInputs.getCorrectInput(1,10, "Incorrect difficulty target");
         }catch (Exception e)

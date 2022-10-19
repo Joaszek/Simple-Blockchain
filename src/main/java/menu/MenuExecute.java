@@ -72,8 +72,10 @@ public class MenuExecute implements MenuOperations
         blockchain.stream()
                 .filter(block -> block.getHash().equals(tempHash))
                 .findFirst()
-                .ifPresent(BlockManager::seeBlock);
+                .ifPresentOrElse(BlockManager::seeBlock,
+                        () -> System.out.println("Didn't find the block"));
     }
+
 
     @Override
     public void searchBlockByUUID(List<Block> blockchain) {
@@ -83,9 +85,11 @@ public class MenuExecute implements MenuOperations
         String uuidString= scanner.nextLine();
 
         blockchain.stream()
-                .filter(block -> block.getBlockUUID().
-                compareTo(UUID.fromString(uuidString))==0)
-                .findFirst().ifPresent(BlockManager::seeBlock);
+                .filter(block -> block.getBlockUUID().toString()
+                        .equals(uuidString))
+                        .findFirst()
+                        .ifPresentOrElse(BlockManager::seeBlock,
+                                () -> System.out.println("Didn't find the block"));
     }
 
     @Override
@@ -123,7 +127,7 @@ public class MenuExecute implements MenuOperations
         } catch (IOException | URISyntaxException e) {
             Logger.printError(e,BlockManager.class);
         }
-        System.out.println("File will be added when you finish program");
+        System.out.println("File will be created when you finish program");
     }
 
     @Override
@@ -135,14 +139,15 @@ public class MenuExecute implements MenuOperations
         {
             Logger.printError(e, BlockManager.class);
         }
-        System.out.println("File will be added when you finish program");
+        System.out.println("File will be created when you finish program");
     }
 
     @Override
     public void readUsersJSON(List<User> users) {
         WriteFromFile writeFromFile = new WriteFromFile();
         writeFromFile.writeFromFile(users);
-        System.out.println("Added users: "+users.get(users.size()-1)+ "and "+users.get(users.size()-2));
+        System.out.println("Added users: "+users.get(users.size()-1)
+                + "and "+users.get(users.size()-2));
     }
 
     @Override

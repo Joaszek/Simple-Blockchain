@@ -9,7 +9,7 @@ public class CheckInputs {
         int ret = min;
         var scanner = new Scanner(System.in);
         while(!isCorrect) {
-            var input = scanner.next();
+            var input = scanner.nextLine();
             try {
                 ret = Integer.parseInt(input);
                 if(ret >= min && ret <= max) {
