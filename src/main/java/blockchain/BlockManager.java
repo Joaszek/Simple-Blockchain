@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BlockManager {
 
@@ -46,6 +47,7 @@ public class BlockManager {
 
             receiver=getAndCheckIfUserExists(users,"Receiver");
 
+            //transaction won't continue until user doesn't enter acceptable value
             transactionValue=checkIfOperationIsPossible(users,sender);
 
             transactionName=getTransactionName();
@@ -88,32 +90,31 @@ public class BlockManager {
         try
         {
             userName = scanner.nextLine();
-        }catch (Exception e)
-        {
-            Logger.printError(e,BlockManager.class);
+        }catch (Exception e) {
+            Logger.printError(e, BlockManager.class);
         }
-        for(User user : users)
+
+        final String userNameFinal = userName;
+
+        if(users.stream().anyMatch(user -> user.getName().equals(userNameFinal)))
         {
-            if(user.getName().equals(userName))
-            {
-                return user.getName();
-            }
+            return userName;
         }
+
+
         //didn't find the name of the user
         boolean nameDoesntExist = true;
+
         while(nameDoesntExist)
         {
             System.out.println("Didn't find the name of the user. " +
                     "Enter new name: ");
             userName = scanner.nextLine();
-            for(User user : users)
-            {
-                if(user.getName().equals(userName))
-                {
-                    nameDoesntExist = false;
-                    break;
-                }
-            }
+
+            final String newUserNameFinal = userName;
+
+            nameDoesntExist = users.stream().noneMatch(user -> user.getName().equals(newUserNameFinal));
+
         }
         return userName;
     }
@@ -124,15 +125,10 @@ public class BlockManager {
 
         Scanner scanner = new Scanner(System.in);
         BigDecimal transactionValue = new BigDecimal(0);
-        BigDecimal stateOfTheWallet = new BigDecimal(0);
+        AtomicReference<BigDecimal> stateOfTheWallet = new AtomicReference<>();
 
-        for(User user : users)
-        {
-            if(user.getName().equals(sender))
-            {
-                stateOfTheWallet=user.getWallet().getBalance();
-            }
-        }
+        users.stream().filter(user -> user.getName().equals(sender))
+                        .findFirst().ifPresent((user)-> stateOfTheWallet.set(user.getWallet().getBalance()));
 
         System.out.println("Enter Transaction Value: ");
         try {
@@ -142,7 +138,7 @@ public class BlockManager {
             Logger.printError(e,BlockManager.class);
         }
         //if transactionValue is negative or equal 0
-        while(transactionValue.compareTo(BigDecimal.valueOf(0))<=0|| transactionValue.compareTo(stateOfTheWallet) > 0)
+        while(transactionValue.compareTo(BigDecimal.valueOf(0))<=0|| transactionValue.compareTo(stateOfTheWallet.get()) > 0)
         {
             if(transactionValue.compareTo(BigDecimal.valueOf(0))<=0)
             {
@@ -150,7 +146,7 @@ public class BlockManager {
                 System.out.println("Enter transaction Value: ");
                 transactionValue=scanner.nextBigDecimal();
             }
-            if(transactionValue.compareTo(stateOfTheWallet)>0)
+            if(transactionValue.compareTo(stateOfTheWallet.get())>0)
             {
                 System.out.println("Sender doesn't have that much money");
                 System.out.println("Enter transaction Value: ");
@@ -175,19 +171,15 @@ public class BlockManager {
     private static void finalizeTransaction(String sender, String receiver, List<User> users, BigDecimal transactionValue)
     {
         UserManager userManager = new UserManager();
-        for(User user:users)
-        {
-            if(user.getName().equals(sender))
-            {
-                //user that is sending the money
-                userManager.give(user, transactionValue);
-            }
-            else if(user.getName().equals(receiver))
-            {
-                //user that is receiving money
-                userManager.receive(user, transactionValue);
-            }
-        }
+
+        users.stream().filter(user ->user.getName().equals(sender))
+                .findFirst().
+                ifPresent((user)->userManager.give(user, transactionValue));
+
+        users.stream().filter(user -> user.getName().equals(receiver))
+                .findFirst()
+                .ifPresent((user)->userManager.receive(user, transactionValue));
+
     }
 
     //create new transaction
@@ -204,25 +196,23 @@ public class BlockManager {
     //print the information about the transactions in the block
     public static  void printTransactions(Block block) {
 
-        for(Transaction transaction: block.getTransactions())
-        {
-            System.out.println("Name: "+transaction.getTransactionName());
-            System.out.println("Value: "+ transaction.getTransactionValue());
-            System.out.println("Time: "+ transaction.getDateTime());
-        }
+        block.getTransactions()
+                .forEach(transaction -> System.out.println(
+                        "Name: "+transaction.getTransactionName()+
+                        "Value: " + transaction.getTransactionValue()+
+                        "Time: " + transaction.getDateTime()
+        ));
     }
 
     //add transaction to wallet of the user
     private static void addTransactionToWallet(String userName, Transaction transaction, List<User> users)
     {
         UserManager userManager = new UserManager();
-        for(User user :users)
-        {
-            if(user.getName().equals(userName))
-            {
-                userManager.addWalletTransaction(user,transaction);
-            }
-        }
+
+        users.stream()
+                .filter(user -> user.getName().equals(userName))
+                .findFirst()
+                .ifPresent((user) -> userManager.addWalletTransaction(user,transaction));
     }
     //create and set hash of the block
     public static void signBlockWithHash(Block block, String previousHash)
@@ -243,10 +233,9 @@ public class BlockManager {
     public static void setDifficultyTarget()
     {
         int difficultyTarget;
-        Scanner scanner = new Scanner(System.in);
         System.out.println("Enter difficulty target in range 1-10: ");
         try{
-            difficultyTarget = CheckInputs.getCorrectInput(1,10);
+            difficultyTarget = CheckInputs.getCorrectInput(1,10, "Incorrect difficulty target");
         }catch (Exception e)
         {
             throw new RuntimeException("Unsupported value for difficulty target: ");

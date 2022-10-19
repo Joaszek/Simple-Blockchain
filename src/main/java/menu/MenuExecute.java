@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MenuExecute implements MenuOperations
 {
@@ -39,9 +40,10 @@ public class MenuExecute implements MenuOperations
         System.out.println("7. Send users to users.json");
         System.out.println("8. Send blockchain to file");
         System.out.println("9. Get users from file");
-        System.out.println("10. Quit");
+        System.out.println("10. Print list of users");
+        System.out.println("11. Quit");
         System.out.println("Choice: ");
-        option = CheckInputs.getCorrectInput(0,10);
+        option = CheckInputs.getCorrectInput(0,11,"unsupported input");
         return option;
     }
 
@@ -80,35 +82,32 @@ public class MenuExecute implements MenuOperations
         System.out.println("Enter UUID: ");
         String uuidString= scanner.nextLine();
 
-        for(Block block : blockchain)
-        {
-            if(block.getBlockUUID().
-                    compareTo(UUID.fromString(uuidString))==0)
-            {
-                BlockManager.seeBlock(block);
-            }
-        }
+        blockchain.stream()
+                .filter(block -> block.getBlockUUID().
+                compareTo(UUID.fromString(uuidString))==0)
+                .findFirst().ifPresent(BlockManager::seeBlock);
     }
 
     @Override
     public void addNewUser(List<User> users) {
         UserManager userManager = new UserManager();
-        users.add(userManager.createNewUser());
+        users.add(userManager.createNewUser(users));
     }
 
     @Override
     public void printUserInformation(List<User> users) {
+        AtomicBoolean didNotFindUser = new AtomicBoolean(false);
         String name;
         Scanner scanner = new Scanner(System.in);
         System.out.println("Name: ");
         name = scanner.nextLine();
-        for(User user : users)
-        {
-            if(user.getName().equals(name))
-            {
-                System.out.println(user);
-            }
-        }
+        users.stream()
+                .filter(user -> user.getName().equals(name))
+                .findFirst().ifPresent(user -> {
+                    System.out.println(user);
+                    didNotFindUser.set(true);
+                });
+        if(!didNotFindUser.get()) System.out.println("User not found");
     }
 
     @Override
@@ -124,6 +123,7 @@ public class MenuExecute implements MenuOperations
         } catch (IOException | URISyntaxException e) {
             Logger.printError(e,BlockManager.class);
         }
+        System.out.println("File will be added when you finish program");
     }
 
     @Override
@@ -135,12 +135,14 @@ public class MenuExecute implements MenuOperations
         {
             Logger.printError(e, BlockManager.class);
         }
+        System.out.println("File will be added when you finish program");
     }
 
     @Override
     public void readUsersJSON(List<User> users) {
         WriteFromFile writeFromFile = new WriteFromFile();
         writeFromFile.writeFromFile(users);
+        System.out.println("Added users: "+users.get(users.size()-1)+ "and "+users.get(users.size()-2));
     }
 
     @Override
@@ -165,5 +167,21 @@ public class MenuExecute implements MenuOperations
         String hash="0";
         block.setHash(HashStrings.hash(hash));
         blockchain.add(block);
+    }
+    public void beforeUsingBlockchain(List<User> users)
+    {
+        System.out.println("You need to add user to use blockchain");
+        addNewUser(users);
+        System.out.println("""
+                Every user starts with balance equal to zero
+                Blockchain has by default one user
+                His name is Satoshi Nakamoto and has balance equal to 1000
+                First transaction's sender has to be Satoshi Nakamoto(creator of bitcoin)""");
+
+    }
+
+    @Override
+    public void printUsers(List<User> users) {
+        users.forEach(user -> System.out.println(user.getName()));
     }
 }

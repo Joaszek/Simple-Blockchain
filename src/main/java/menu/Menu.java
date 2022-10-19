@@ -22,12 +22,14 @@ public class Menu {
         BlockManager.setDifficultyTarget();
         menuOperations.createFirstUser(users);
         menuOperations.createFirstBlock(blockchain);
-
+        menuOperations.beforeUsingBlockchain(users);
         boolean loop = true;
         while (loop) {
             //get option from menu
+
             int option = menuOperations.getOption(blockchain, users);
             lastBlock = menuOperations.setLastBlock(blockchain);
+
             switch (option) {
                 case 1 -> menuOperations.addTransactionsToBlock(users, blockchain);
                 case 2 -> menuOperations.searchBlockByHash(blockchain);
@@ -38,11 +40,8 @@ public class Menu {
                 case 7 -> menuOperations.writeUsersToFile(users);
                 case 8 -> menuOperations.writeBlockchainToFile(blockchain);
                 case 9 -> menuOperations.readUsersJSON(users);
-                case 10 -> menuOperations.endOperations();
-
-                default -> {
-                    //Logger.printUnsupportedOption(Menu.class);
-                }
+                case 10 -> menuOperations.printUsers(users);
+                case 11 -> menuOperations.endOperations();
               }
         }
     }

@@ -3,7 +3,8 @@ package checkInputs;
 import java.util.Scanner;
 
 public class CheckInputs {
-    public static int getCorrectInput(int min, int max) {
+    public static int getCorrectInput(int min, int max, String message)
+    {
         boolean isCorrect = false;
         int ret = min;
         var scanner = new Scanner(System.in);
@@ -14,8 +15,12 @@ public class CheckInputs {
                 if(ret >= min && ret <= max) {
                     isCorrect = true;
                 }
+                else
+                {
+                    System.out.println(message);
+                }
             } catch (NumberFormatException e) {
-                System.out.println("Incorrect input");
+                System.out.println(message);
             }
         }
         return ret;
