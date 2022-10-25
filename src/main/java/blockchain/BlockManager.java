@@ -43,12 +43,12 @@ public class BlockManager {
         {
             System.out.println("TRANSACTION");
 
-            sender=getAndCheckIfUserExists(users,"Sender");
+            User sender =getAndCheckIfUserExists(users,"Sender");
 
-            receiver=getAndCheckIfUserExists(users,"Receiver");
+            User receiver =getAndCheckIfUserExists(users,"Receiver");
 
             //transaction won't continue until user doesn't enter acceptable value
-            transactionValue=checkIfOperationIsPossible(users,sender);
+            transactionValue=checkIfOperationIsPossible(sender);
 
             transactionName=getTransactionName();
 
@@ -81,55 +81,12 @@ public class BlockManager {
     }
 
 
-    //check if user exists, if not then create one
-    private static String getAndCheckIfUserExists(List<User> users, String whichUser)
-    {
-        Scanner scanner = new Scanner(System.in);
-        String userName = null;
-        System.out.println("Sign "+ whichUser+" name: ");
-        try
-        {
-            userName = scanner.nextLine();
-        }catch (Exception e) {
-            Logger.printError(e, BlockManager.class);
-        }
-
-        final String userNameFinal = userName;
-
-        if(users.stream().anyMatch(user -> user.getName().equals(userNameFinal)))
-        {
-            return userName;
-        }
-
-
-        //didn't find the name of the user
-        boolean nameDoesntExist = true;
-
-        while(nameDoesntExist)
-        {
-            System.out.println("Didn't find the name of the user. " +
-                    "Enter new name: ");
-            userName = scanner.nextLine();
-
-            final String newUserNameFinal = userName;
-
-            nameDoesntExist = users.stream()
-                    .noneMatch(user -> user.getName().equals(newUserNameFinal));
-
-        }
-        return userName;
-    }
-
-
     //check if balance of the sender is enough to run the transaction
-    private static BigDecimal checkIfOperationIsPossible(List<User> users,String sender) {
+    private static BigDecimal checkIfOperationIsPossible(User sender) {
 
         Scanner scanner = new Scanner(System.in);
         BigDecimal transactionValue = new BigDecimal(0);
-        AtomicReference<BigDecimal> stateOfTheWallet = new AtomicReference<>();
-
-        users.stream().filter(user -> user.getName().equals(sender))
-                        .findFirst().ifPresent((user)-> stateOfTheWallet.set(user.getWallet().getBalance()));
+        BigDecimal stateOfTheWallet = sender.getWallet().getBalance();
 
         System.out.println("Enter Transaction Value: ");
         try {
@@ -139,7 +96,7 @@ public class BlockManager {
             Logger.printError(e,BlockManager.class);
         }
         //if transactionValue is negative or equal 0
-        while(transactionValue.compareTo(BigDecimal.valueOf(0))<=0|| transactionValue.compareTo(stateOfTheWallet.get()) > 0)
+        while(transactionValue.compareTo(BigDecimal.valueOf(0))<=0|| transactionValue.compareTo(stateOfTheWallet) > 0)
         {
             if(transactionValue.compareTo(BigDecimal.valueOf(0))<=0)
             {
@@ -147,7 +104,7 @@ public class BlockManager {
                 System.out.println("Enter transaction Value: ");
                 transactionValue=scanner.nextBigDecimal();
             }
-            if(transactionValue.compareTo(stateOfTheWallet.get())>0)
+            if(transactionValue.compareTo(stateOfTheWallet)>0)
             {
                 System.out.println("Sender doesn't have that much money");
                 System.out.println("Enter transaction Value: ");
@@ -169,7 +126,7 @@ public class BlockManager {
     }
 
     //change the balance of the users
-    private static void finalizeTransaction(String sender, String receiver, List<User> users, BigDecimal transactionValue)
+    private static void finalizeTransaction(User sender, User receiver, List<User> users, BigDecimal transactionValue)
     {
         UserManager userManager = new UserManager();
 
@@ -179,8 +136,13 @@ public class BlockManager {
 
         users.stream().filter(user -> user.getName().equals(receiver))
                 .findFirst()
-                .ifPresent((user)->userManager.receive(user, transactionValue));
+                .ifPresent((user)->receive(user, transactionValue));
 
+    }
+
+    private static void receive(User user,BigDecimal money)
+    {
+        user.getWallet().addBalance(money);
     }
 
     //create new transaction

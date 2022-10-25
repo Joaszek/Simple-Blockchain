@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="SimpleBlockchain" target="17" />
+      <module name="SimpleBlockchain" target="16" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -2,12 +2,15 @@ package users;
 
 import wallet.Wallet;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 
 public class User {
     private UUID uuid;
     private String name;
+
+    private Wallet wallet = new Wallet();
 
     public UUID getUuid() {
         return uuid;
@@ -29,25 +32,21 @@ public class User {
         return wallet;
     }
 
-    public void setWallet(Wallet wallet) {
-        this.wallet = wallet;
+    public User (String name) {
+        this.uuid = UUID.randomUUID();
+        this.name = name;
     }
 
-    private Wallet wallet;
-    public User()
+    public User(UUID uuid, String name)
     {
-        UserManager userManager = new UserManager();
-        userManager.setWallet(this);
-        this.setUuid(UUID.randomUUID());
-
+        this.uuid = uuid;
+        this.name = name;
     }
-    public User(boolean isFirst)
-    {
-        UserManager manager = new UserManager();
-        manager.setWallet(this);
-        manager.setFirstBalance(this);
-        this.setUuid(UUID.randomUUID());
-        this.setName("Satoshi Nakamoto");
+
+    static public User createFirstUser(String name) {
+        User user = new User(name);
+        user.getWallet().addBalance(BigDecimal.valueOf(1000));
+        return user;
     }
 
     @Override

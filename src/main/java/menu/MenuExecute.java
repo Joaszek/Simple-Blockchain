@@ -21,6 +21,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MenuExecute implements MenuOperations
 {
+    private WriteToFile writeToFile = new WriteToFile();
 
     @Override
     public int getOption(@NotNull List<Block> blockchain, @NotNull List<User> users) {
@@ -54,9 +55,9 @@ public class MenuExecute implements MenuOperations
         Block lastBlock =blockchain.get(blockchain.size()-1);
 
         BlockManager.addTransactionToBlock(users,block);
+
         block.getBlockHeader().setMerkleRoot(hash.getMerkleRoot(block.getTransactions()));
-        BlockManager.setBlockHeaderTimeStamp(block);
-        BlockManager.signBlockWithHash(block, lastBlock.getHash());
+        block.sign(lastBlock.getHash());
         blockchain.add(block);
         System.out.println("Block was successfully added to blockchain.");
     }
@@ -121,7 +122,6 @@ public class MenuExecute implements MenuOperations
 
     @Override
     public void writeUsersToFile(List<User> users) {
-        WriteToFile writeToFile = new WriteToFile();
         try {
             writeToFile.writeUsersToFile(users);
         } catch (IOException | URISyntaxException e) {
@@ -132,7 +132,6 @@ public class MenuExecute implements MenuOperations
 
     @Override
     public void writeBlockchainToFile(List<Block> blockchain) {
-       WriteToFile writeToFile = new WriteToFile();
         try{
             writeToFile.writeBlockchainToFile(blockchain);
         }catch (IOException e)
@@ -163,7 +162,7 @@ public class MenuExecute implements MenuOperations
 
     @Override
     public void createFirstUser(List<User> users) {
-        users.add(new User(true));
+        users.add(User.createFirstUser("TEST"));
     }
 
     @Override

@@ -1,5 +1,7 @@
 package blockchain;
 
+import hashing.Hash;
+
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +37,7 @@ public class Block {
         this.blockID=UUID.randomUUID();
         this.blockHeader = new BlockHeader();
     }
+
     public Block(boolean isFirst)
     {
         this.blockID=UUID.randomUUID();
@@ -66,8 +69,24 @@ public class Block {
         return hash;
     }
 
-    public void setHash(String hash) {
+    private void setHash(String hash) {
         this.hash = hash;
+    }
+
+    public void sign(String previousHash)
+    {
+        StringBuilder timeStamp1= new StringBuilder(String.valueOf(LocalDateTime.now()));
+        getBlockHeader().setTimeStamp(timeStamp1);
+
+        int difficultyTarget =BlockHeader.getDifficultyTarget();
+        int nonce = getBlockHeader().getNonce();
+        String merkleRoot = getBlockHeader().getMerkleRoot();
+        StringBuilder timeStamp = getBlockHeader().getTimeStamp();
+
+        setHash(Hash.mine(
+                this,nonce,previousHash,
+                difficultyTarget,merkleRoot,
+                timeStamp));
     }
 }
 

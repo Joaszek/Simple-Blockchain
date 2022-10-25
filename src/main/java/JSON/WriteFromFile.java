@@ -21,18 +21,20 @@ public class WriteFromFile {
     public void writeFromFile(List<User> users) {
 
         try {
-            JSONParser parser = new JSONParser();
+            JSONParser parser = new JSONParser(); //TODO: Wystarczy przerzucic?
+
+
+            //TODO: PAth mógłby być jako parametr
             Object obj = parser.parse(new FileReader("src/main/resources/usersToRead.json"));
+
             JSONObject objJsonObject = new JSONObject(obj.toString());
             JSONArray jsonArray = objJsonObject.getJSONArray("users");
 
             for (int i = 0; i < jsonArray.length(); i++) {
 
-                User user = new User();
                 String uuid = jsonArray.getJSONObject(i).getString("uuid");
-                user.setUuid(UUID.fromString(uuid));
                 String name = jsonArray.getJSONObject(i).getString("name");
-                user.setName(name);
+                User user = new User(UUID.fromString(uuid), name);
                 JSONObject walletJSON = jsonArray.getJSONObject(i).getJSONObject("wallet");
 
                 Wallet wallet = new Wallet();
